@@ -13,9 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::middleware('auth:api')->post('/test', function (Request $request) {
-    return 'hello';
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::post('/reservation', 'ReservationsController@store'); 
+    Route::get('/reservations', 'ReservationsController@index');
+    Route::get('/reservation/{reservation}', 'ReservationsController@show');
+    Route::delete('/reservation/{reservation}', 'ReservationsController@destroy');
+    Route::get('/reservation/is-authorized/{user}', 'ReservationsController@isAuthorized');
 });

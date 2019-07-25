@@ -9,16 +9,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'firstname', 'lastname', 'email', 'password',
+        'firstname', 'lastname', 'email', 'password', 'api_token'
     ];
-
+    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -27,7 +27,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
+    
     /**
      * The attributes that should be cast to native types.
      *
@@ -36,4 +36,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    protected $appends = ['fullname'];
+
+
+    public function reservations()
+    {
+        return $this->hasMany('App\Reservation');
+    }
+
+
+    public function getFullnameAttribute()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }
