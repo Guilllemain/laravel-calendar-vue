@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'mailgun'),
+    'driver' => env('MAIL_DRIVER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('MAILGUN_SMTP_LOGIN'),
 
-    'password' => env('MAIL_PASSWORD'),
+    'password' => env('MAILGUN_SMTP_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
