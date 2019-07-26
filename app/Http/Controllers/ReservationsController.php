@@ -46,7 +46,7 @@ class ReservationsController extends Controller
         $reservations = $user->reservations;
         foreach ($reservations as $reservation) {
             $date = Carbon::create($reservation->date);
-            if ($date->greaterThanOrEqualTo(Carbon::now())) {
+            if ($date->greaterThanOrEqualTo(now()->startOfDay())) {
                 return 0;
             };
         }

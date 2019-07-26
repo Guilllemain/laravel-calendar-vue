@@ -3,4 +3,56 @@
 
 // Variables
 @import 'variables';
+@import 'tailwind';
 
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Nunito', 'sans-serif';
+}
+
+#app {
+    height: 100%;
+}
+
+.navbar {
+    background-color: $main-color;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    color: white;
+    margin-bottom: 2%;
+
+    &-title {
+        text-transform: uppercase;
+        font-weight: 300;
+    }
+
+    &-right {
+        display: flex;
+
+        .nav-item:first-child {
+            margin-right: 1rem;
+        }
+    }
+
+    a {
+        color: currentColor;
+    }
+}

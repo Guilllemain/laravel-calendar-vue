@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-<vue-calendar :user="{{$user}}"></vue-calendar>
-</div>
+    <vue-calendar :user="{{$user}}"></vue-calendar>
 @endsection

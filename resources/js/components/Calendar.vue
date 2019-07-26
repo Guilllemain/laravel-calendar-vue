@@ -3,17 +3,22 @@
         <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
             <div class="modal__content">
                 <template v-if="editEvent">
-                    <h3>{{ user.fullname }}</h3>
-                    <div>Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
-                    <button class="modal__cta" @click="deleteEvent">Supprimer cette réservation</button>
+                    <h3 class="font-bold">{{ user.fullname }}</h3>
+                    <div class="text-gray-600">Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
+                    <button class="mt-8 w-full shadow bg-purple-500 hover:bg-purple-400 outline-none text-white font-bold py-2 px-4 rounded" @click="deleteEvent">Supprimer cette réservation</button>
                 </template>
                 <template v-else>
-                    <label for="parking-name">Sélectionner votre place de parking</label>
-                    <select name="parking-name" v-model="parking_number">
-                        <option value="1">Parking 1</option>
-                        <option value="2">Parking 2</option>
-                    </select>
-                    <button class="modal__cta" @click="addEvent">Valider</button>
+                    <label class="block text-gray-600 mb-2 pr-4" for="parking-name">Sélectionner votre place de parking</label>
+                    <div class="relative">
+                        <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
+                            <option value="1">Parking 1</option>
+                            <option value="2">Parking 2</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                    <button class="mt-8 w-full shadow bg-purple-500 hover:bg-purple-400 outline-none text-white font-bold py-2 px-4 rounded" @click="addEvent">Valider</button>
                 </template>
             </div>
         </modal-component>
@@ -36,7 +41,6 @@
 <script>
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import moment from 'moment'
 
@@ -60,7 +64,7 @@ export default {
             date: "",
             parking_number: "1",
             isAuthorized: true,
-            calendarPlugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+            calendarPlugins: [dayGridPlugin, interactionPlugin],
             calendarWeekends: true,
             calendarEvents: []
         };
@@ -86,7 +90,7 @@ export default {
     methods: {
         handleDateClick(arg) {
             if (arg.date < moment().subtract(1, 'days')) return
-            if (arg.date > moment().add(7, 'days')) return alert("You can't make a reservation more than 7 days in advance")
+            if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return alert("You can't make a reservation more than 7 days in advance")
             if (!this.isAuthorized) return alert('You already have a reservation')
             if(this.isDayFull(arg.date)) return alert('day is full')
             console.log(arg)
@@ -95,7 +99,7 @@ export default {
         },
         handleEventClick(arg) {
             console.log(arg.event)
-            if (arg.event.start < moment()) return
+            if (moment(arg.event.start).endOf('day') < moment()) return
             this.getReservation(arg.event.id)
         },
         async addEvent() {
@@ -168,9 +172,9 @@ export default {
             return false
         },
         closeModal() {
+            this.showModal = false
             this.editEvent = false
             this.selectedEvent = ''
-            this.showModal = false
         }
     }
 };
@@ -211,5 +215,19 @@ export default {
 }
 .fc-day-grid-event {
     padding: .5rem;
+}
+.fc-button-primary {
+    background-color: #44337a;
+    border-color: #44337a;
+
+    &:disabled {
+        background-color: #44337a;
+        border-color: #44337a;
+    }
+
+    &:hover {
+        background-color: #6b46c1;
+        border-color: #6b46c1;
+    }
 }
 </style>
