@@ -23,8 +23,37 @@ class ReservationsController extends Controller
 
     public function store(Request $request)
     {
+        // if the requested date is in more than a week time, return
+        if ($request->date > now()->startOfDay()->addDays('7')) {
+            return;
+        }
+        // if the requested date is in the past, return
+        if ($request->date < now()->subDays('1')->startOfDay()) {
+            return;
+        }
+        $reservations_at_requested_date = Reservation::where('date', $request->date)->get();
+        
+        // check if day is full
+        if (count($reservations_at_requested_date) === 2) {
+            return;
+        }
+
+        // check if the parking requested is not the same as the one already booked
+        if (count($reservations_at_requested_date) > 0) {
+            if ($reservations_at_requested_date[0]->parking_number === $request->parking_number) {
+                return;
+            };
+        }
+        
+        // return if there is already a reservation in the next days
+        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', now()->startOfDay())->exists();
+        if ($user_reservations) {
+            return;
+        }
+        
+        // add record to the database
         $reservation = Reservation::create([
-            'user_id' => $request->user_id,
+            'user_id' => auth()->id(),
             'parking_number' => $request->parking_number,
             'date' => $request->date
         ]);

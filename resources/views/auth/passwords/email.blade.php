@@ -15,12 +15,12 @@
             </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                    type="email" {{-- @error('email') is-invalid @enderror" --}} id="email" name="email"
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('email')is-invalid @enderror"
+                    type="email" id="email" name="email"
                     value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                 @error('email')
-                <span class="invalid-feedback" role="alert">
+                <span class="text-xs text-red-600" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
@@ -29,7 +29,7 @@
         </div>
 
         <button
-            class="w-full shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+            class="btn"
             type="submit">
             Réinitialiser son mot de passe
         </button>

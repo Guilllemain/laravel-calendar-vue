@@ -14825,6 +14825,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -14842,11 +14844,13 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   data: function data() {
     return {
+      parkings: [1, 2],
       showModal: false,
-      editEvent: false,
+      isEditing: false,
+      isAdding: false,
       selectedEvent: '',
       date: "",
-      parking_number: "1",
+      parking_number: 1,
       isAuthorized: true,
       calendarPlugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2___default.a, _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3___default.a],
       calendarWeekends: true,
@@ -14902,63 +14906,66 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   }(),
   methods: {
     handleDateClick: function handleDateClick(arg) {
-      if (arg.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().subtract(1, 'days')) return;
+      if (arg.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(arg.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger');
       if (this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
+      this.parkingsAvailable(arg.dateStr);
       this.date = arg.date;
+      this.isEditing = false;
+      this.isAdding = true;
       this.showModal = true;
     },
     handleEventClick: function handleEventClick(arg) {
-      console.log(arg.event);
+      this.isAdding = false;
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(arg.event.start).endOf('day') < moment__WEBPACK_IMPORTED_MODULE_4___default()()) return;
       this.getReservation(arg.event.id);
     },
     addEvent: function () {
       var _addEvent = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(event) {
         var parking_number, _ref2, data;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                parking_number = Number(this.parking_number);
-                _context2.prev = 1;
-                _context2.next = 4;
+                console.log(event);
+                parking_number = this.parking_number;
+                _context2.prev = 2;
+                _context2.next = 5;
                 return axios.post('/api/reservation', {
-                  user_id: this.user.id,
                   parking_number: parking_number,
-                  date: this.date,
+                  date: moment__WEBPACK_IMPORTED_MODULE_4___default()(this.date).format('YYYY-MM-DD'),
                   api_token: this.user.api_token
                 });
 
-              case 4:
+              case 5:
                 _ref2 = _context2.sent;
                 data = _ref2.data;
                 this.pushEvent(data, this.user.fullname, this.date, parking_number, this.user.id, this.user.email);
-                _context2.next = 12;
+                _context2.next = 13;
                 break;
 
-              case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](1);
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](2);
                 console.error(_context2.t0);
 
-              case 12:
+              case 13:
                 this.isUserAuthorized();
                 this.showModal = false;
 
-              case 14:
+              case 15:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[1, 9]]);
+        }, _callee2, this, [[2, 10]]);
       }));
 
-      function addEvent() {
+      function addEvent(_x) {
         return _addEvent.apply(this, arguments);
       }
 
@@ -15041,7 +15048,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
               case 7:
                 this.selectedEvent = data;
-                this.editEvent = true;
+                this.isEditing = true;
                 this.showModal = true;
                 _context4.next = 15;
                 break;
@@ -15059,12 +15066,28 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         }, _callee4, this, [[0, 12]]);
       }));
 
-      function getReservation(_x) {
+      function getReservation(_x2) {
         return _getReservation.apply(this, arguments);
       }
 
       return getReservation;
     }(),
+    parkingsAvailable: function parkingsAvailable(date) {
+      var dayClicked = this.calendarEvents.filter(function (event) {
+        return event.start === date;
+      });
+
+      if (dayClicked.length > 0) {
+        return this.parkings = this.parkings.filter(function (park) {
+          var numberAvailable = dayClicked.find(function (day) {
+            return day.parking_number !== park;
+          });
+          if (numberAvailable) return numberAvailable.parking_number;
+        });
+      }
+
+      return this.parkings = [1, 2];
+    },
     isUserAuthorized: function () {
       var _isUserAuthorized = _asyncToGenerator(
       /*#__PURE__*/
@@ -34984,7 +35007,7 @@ var render = function() {
             "div",
             { staticClass: "modal__content" },
             [
-              _vm.editEvent
+              _vm.isEditing
                 ? [
                     _c("h3", { staticClass: "font-bold" }, [
                       _vm._v(_vm._s(_vm.user.fullname))
@@ -35009,7 +35032,10 @@ var render = function() {
                       [_vm._v("Supprimer cette réservation")]
                     )
                   ]
-                : [
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.isAdding
+                ? [
                     _c(
                       "label",
                       {
@@ -35019,83 +35045,112 @@ var render = function() {
                       [_vm._v("Sélectionner votre place de parking")]
                     ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "relative" }, [
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.parking_number,
-                              expression: "parking_number"
-                            }
-                          ],
-                          staticClass:
-                            "block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500",
-                          attrs: { name: "parking-name", id: "parking_number" },
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.parking_number = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            }
+                    _c(
+                      "form",
+                      {
+                        attrs: { method: "POST" },
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.addEvent($event)
                           }
-                        },
-                        [
-                          _c("option", { attrs: { value: "1" } }, [
-                            _vm._v("Parking 1")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2" } }, [
-                            _vm._v("Parking 2")
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass:
-                            "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-                        },
-                        [
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "relative" }, [
                           _c(
-                            "svg",
+                            "select",
                             {
-                              staticClass: "fill-current h-4 w-4",
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.parking_number,
+                                  expression: "parking_number"
+                                }
+                              ],
+                              staticClass:
+                                "block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500",
                               attrs: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                viewBox: "0 0 20 20"
+                                name: "parking-name",
+                                id: "parking_number"
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.parking_number = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                }
                               }
                             },
                             [
-                              _c("path", {
-                                attrs: {
-                                  d:
-                                    "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                                }
+                              _c(
+                                "option",
+                                { attrs: { disabled: "", selected: "" } },
+                                [_vm._v("Veuillez choisir un parking")]
+                              ),
+                              _vm._v(" "),
+                              _vm._l(_vm.parkings, function(parking) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: parking } },
+                                  [_vm._v("Parking " + _vm._s(parking))]
+                                )
                               })
+                            ],
+                            2
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                            },
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticClass: "fill-current h-4 w-4",
+                                  attrs: {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    viewBox: "0 0 20 20"
+                                  }
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                                    }
+                                  })
+                                ]
+                              )
                             ]
                           )
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      { staticClass: "btn mt-8", on: { click: _vm.addEvent } },
-                      [_vm._v("Valider")]
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mt-8",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("Valider")]
+                        )
+                      ]
                     )
                   ]
+                : _vm._e()
             ],
             2
           )

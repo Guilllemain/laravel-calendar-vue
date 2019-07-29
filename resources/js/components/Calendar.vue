@@ -2,23 +2,25 @@
     <div class="">
         <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
             <div class="modal__content">
-                <template v-if="editEvent">
+                <template v-if="isEditing">
                     <h3 class="font-bold">{{ user.fullname }}</h3>
                     <div class="text-gray-600 mt-2">Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
                     <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
                 </template>
-                <template v-else>
+                <template v-if="isAdding">
                     <label class="block text-gray-600 mb-2 pr-4" for="parking-name">Sélectionner votre place de parking</label>
-                    <div class="relative">
-                        <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
-                            <option value="1">Parking 1</option>
-                            <option value="2">Parking 2</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    <form @submit.prevent="addEvent" method="POST">
+                        <div class="relative">
+                            <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
+                                <option disabled selected>Veuillez choisir un parking</option>
+                                <option v-for="parking in parkings" :value="parking">Parking {{ parking }}</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
                         </div>
-                    </div>
-                    <button class="btn mt-8" @click="addEvent">Valider</button>
+                        <button type="submit" class="btn mt-8">Valider</button>
+                    </form>
                 </template>
             </div>
         </modal-component>
@@ -68,11 +70,13 @@ export default {
     },
     data: function() {
         return {
+            parkings: [1, 2],
             showModal: false,
-            editEvent: false,
+            isEditing: false,
+            isAdding: false,
             selectedEvent: '',
             date: "",
-            parking_number: "1",
+            parking_number: 1,
             isAuthorized: true,
             calendarPlugins: [dayGridPlugin, interactionPlugin],
             calendarWeekends: true,
@@ -99,26 +103,29 @@ export default {
     },
     methods: {
         handleDateClick(arg) {
-            if (arg.date < moment().subtract(1, 'days')) return
+            if (arg.date < moment().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger')
             if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
             if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
             if(this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
-            this.date = arg.date;
-            this.showModal = true;
+            this.parkingsAvailable(arg.dateStr)
+            this.date = arg.date
+            this.isEditing = false
+            this.isAdding = true
+            this.showModal = true
         },
         handleEventClick(arg) {
-            console.log(arg.event)
+            this.isAdding = false
             if (moment(arg.event.start).endOf('day') < moment()) return
             this.getReservation(arg.event.id)
         },
-        async addEvent() {
-            const parking_number = Number(this.parking_number)
+        async addEvent(event) {
+            console.log(event)
+            const parking_number = this.parking_number
             
             try {
                 const { data } = await axios.post('/api/reservation', {
-                    user_id: this.user.id,
                     parking_number: parking_number,
-                    date: this.date,
+                    date: moment(this.date).format('YYYY-MM-DD'),
                     api_token: this.user.api_token
                 })
                 this.pushEvent(data, this.user.fullname, this.date, parking_number, this.user.id, this.user.email)
@@ -153,11 +160,21 @@ export default {
                 const { data } = await axios.get(`/api/reservation/${id}?api_token=${this.user.api_token}`)
                 if (data.user_id !== this.user.id) return
                 this.selectedEvent = data
-                this.editEvent = true
+                this.isEditing = true
                 this.showModal = true
             } catch (error) {
                 console.error(error)
             }
+        },
+        parkingsAvailable(date) {
+            const dayClicked = this.calendarEvents.filter(event => event.start === date)
+            if(dayClicked.length > 0) {
+                return this.parkings = this.parkings.filter(park => {
+                    const numberAvailable = dayClicked.find(day => day.parking_number !== park)
+                    if(numberAvailable) return numberAvailable.parking_number
+                })
+            }
+            return this.parkings = [1, 2]
         },
         async isUserAuthorized() {
             try {
