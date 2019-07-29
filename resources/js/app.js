@@ -18,6 +18,14 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+window.Event = new Vue();
+
+window.flash = function (message, level = 'success') {
+    window.Event.$emit('flash', { message, level });
+};
+
+
+Vue.component('flash-component', require('./components/FlashComponent.vue').default);
 Vue.component('vue-calendar', require('./components/Calendar.vue').default);
 Vue.component('modal-component', require('./components/ModalComponent.vue').default);
 

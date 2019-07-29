@@ -5,6 +5,9 @@
 @import 'variables';
 @import 'tailwind';
 
+.is-invalid {
+    border-color: #e53e3e !important;
+}
 
 * {
     margin: 0;

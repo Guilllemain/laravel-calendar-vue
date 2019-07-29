@@ -627,6 +627,33 @@ video {
   }
 }
 
+.btn{
+  color: #fff;
+  width: 100%;
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  padding: .75rem;
+  border-radius: .25rem;
+  letter-spacing: 0.05em;
+  background-color: #9f7aea;
+  line-height: 1.1;
+  transition: all .2s ease-in-out;
+}
+
+.btn:hover{
+  color: #fff;
+  background-color: #b794f4;
+}
+
+.btn:focus{
+  outline: none;
+}
+
+.btn:active{
+  transform: scale(.95) translateY(4px);
+}
+
 .appearance-none{
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -7549,6 +7576,10 @@ video {
 
 .z-auto{
   z-index: auto;
+}
+
+.is-invalid {
+  border-color: #e53e3e !important;
 }
 
 * {

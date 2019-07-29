@@ -1,11 +1,11 @@
 <template>
-    <div class="demo-app">
+    <div class="">
         <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
             <div class="modal__content">
                 <template v-if="editEvent">
                     <h3 class="font-bold">{{ user.fullname }}</h3>
-                    <div class="text-gray-600">Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
-                    <button class="mt-8 w-full shadow bg-purple-500 hover:bg-purple-400 outline-none text-white font-bold py-2 px-4 rounded" @click="deleteEvent">Supprimer cette réservation</button>
+                    <div class="text-gray-600 mt-2">Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
+                    <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
                 </template>
                 <template v-else>
                     <label class="block text-gray-600 mb-2 pr-4" for="parking-name">Sélectionner votre place de parking</label>
@@ -18,7 +18,7 @@
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                         </div>
                     </div>
-                    <button class="mt-8 w-full shadow bg-purple-500 hover:bg-purple-400 outline-none text-white font-bold py-2 px-4 rounded" @click="addEvent">Valider</button>
+                    <button class="btn mt-8" @click="addEvent">Valider</button>
                 </template>
             </div>
         </modal-component>
@@ -35,6 +35,16 @@
             @dateClick="handleDateClick"
             @eventClick="handleEventClick"
         />
+        <div class="flex justify-center m-4">
+            <div class="flex items-center mr-8">
+                <span class="bg-orange-600 h-4 w-8 block mr-2"></span>
+                Parking 1
+            </div>
+            <div class="flex items-center">
+                <span class="bg-teal-600 h-4 w-8 block mr-2"></span>
+                Parking 2
+            </div>
+        </div>
     </div>
 </template>
 
@@ -90,10 +100,9 @@ export default {
     methods: {
         handleDateClick(arg) {
             if (arg.date < moment().subtract(1, 'days')) return
-            if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return alert("You can't make a reservation more than 7 days in advance")
-            if (!this.isAuthorized) return alert('You already have a reservation')
-            if(this.isDayFull(arg.date)) return alert('day is full')
-            console.log(arg)
+            if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
+            if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
+            if(this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             this.date = arg.date;
             this.showModal = true;
         },
@@ -133,7 +142,7 @@ export default {
                 title,
                 start,
                 allDay: true,
-                color: parking_number === 1 ? "blue" : "red",
+                color: parking_number === 1 ? "#dd6b20" : "#319795",
                 parking_number,
                 user_id,
                 email
@@ -185,10 +194,6 @@ export default {
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
 @import "~@fullcalendar/timegrid/main.css";
-.demo-app {
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-}
 .demo-app-calendar {
     margin: 0 auto;
     max-width: 900px;
@@ -199,14 +204,6 @@ export default {
     padding: 3rem;
     display: flex;
     flex-direction: column;
-}
-.modal__cta {
-    margin-top: 2rem;
-    padding: .5rem;
-    background-color: rgb(88, 170, 233);
-    color: white;
-    text-transform: uppercase;
-    border-radius: .2rem;
 }
 
 // overwrite default style
@@ -228,6 +225,20 @@ export default {
     &:hover {
         background-color: #6b46c1;
         border-color: #6b46c1;
+    }
+
+    &:not(:disabled):active {
+        background-color: #553c9a;
+        border-color: #553c9a;
+    }
+
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:not(:disabled):active:focus {
+        outline: none;
+        box-shadow: none;
     }
 }
 </style>

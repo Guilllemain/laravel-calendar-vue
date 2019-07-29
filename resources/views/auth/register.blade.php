@@ -10,7 +10,7 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                     type="text" {{-- @error('firstname') is-invalid @enderror" --}} id="firstname" name="firstname" value="{{ old('firstname') }}"
                     required autocomplete="email" autofocus>
 
@@ -28,7 +28,7 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                     {{-- @error('lastname') is-invalid @enderror" --}} id="lastname" type="text" name="lastname" required>
 
                 @error('lastname')
@@ -45,7 +45,7 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                     {{-- @error('email') is-invalid @enderror" --}} id="email" type="email" name="email" required>
 
                 @error('email')
@@ -62,8 +62,8 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                    {{-- @error('password') is-invalid @enderror" --}} id="password" type="password" name="password" required>
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('password') is-invalid @enderror"
+                    id="password" type="password" name="password" required>
 
                 @error('password')
                 <span class="invalid-feedback" role="alert">
@@ -79,8 +79,8 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                    {{-- @error('password_confirmation') is-invalid @enderror" --}} id="password_confirmation" type="password" name="password_confirmation" required>
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('password_confirmation') is-invalid @enderror"
+                    id="password_confirmation" type="password" name="password_confirmation" required>
 
                 @error('password_confirmation')
                 <span class="invalid-feedback" role="alert">
@@ -92,7 +92,7 @@
 
         <div class="">
                 <button
-                    class="w-full shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                    class="btn"
                     type="submit">
                     S'enregister
                 </button>

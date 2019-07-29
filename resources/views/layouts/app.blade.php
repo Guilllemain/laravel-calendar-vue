@@ -58,6 +58,8 @@
         <main class="">
             @yield('content')
         </main>
+
+        <flash-component message="{{ session('flash') }}"></flash-component>
     </div>
 </body>
 </html>

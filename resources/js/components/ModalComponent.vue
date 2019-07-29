@@ -21,7 +21,7 @@ export default {
         contentWidth: {
             required: false,
             type: String,
-            default: '90vh'
+            default: '30rem'
         }
     },
     data() {
