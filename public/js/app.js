@@ -14847,6 +14847,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         number: 2,
         color: '#319795'
       }],
+      parkingsAvailable: '',
       showModal: false,
       isEditing: false,
       isAdding: false,
@@ -14891,8 +14892,9 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
             case 11:
               this.isUserAuthorized();
+              this.parkingsAvailable = this.parkings;
 
-            case 12:
+            case 13:
             case "end":
               return _context.stop();
           }
@@ -14912,7 +14914,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(arg.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger');
       if (this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
-      this.parkingsAvailable(arg.dateStr);
+      this.isParkingAvailable(arg.dateStr);
       this.date = arg.date;
       this.isEditing = false;
       this.isAdding = true;
@@ -15085,21 +15087,22 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
       return getReservation;
     }(),
-    parkingsAvailable: function parkingsAvailable(date) {
+    isParkingAvailable: function isParkingAvailable(date) {
       var dayClicked = this.calendarEvents.filter(function (event) {
         return event.start === date;
       });
 
       if (dayClicked.length > 0) {
-        return this.parkings = this.parkings.filter(function (park) {
+        return this.parkingsAvailable = this.parkings.filter(function (park) {
           var numberAvailable = dayClicked.find(function (day) {
-            return day.parking_number !== park;
+            return day.parking_number !== park.number;
           });
-          if (numberAvailable) return numberAvailable.parking_number;
+          console.log(numberAvailable, park);
+          if (numberAvailable) return park.number !== numberAvailable.parking_number;
         });
       }
 
-      return this.parkings = [1, 2];
+      return this.parkingsAvailable = this.parkings;
     },
     isUserAuthorized: function () {
       var _isUserAuthorized = _asyncToGenerator(
@@ -35092,7 +35095,7 @@ var render = function() {
                                 [_vm._v("Veuillez choisir une place")]
                               ),
                               _vm._v(" "),
-                              _vm._l(_vm.parkings, function(parking) {
+                              _vm._l(_vm.parkingsAvailable, function(parking) {
                                 return _c(
                                   "option",
                                   { domProps: { value: parking.number } },

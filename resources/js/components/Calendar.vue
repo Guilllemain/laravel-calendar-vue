@@ -13,7 +13,7 @@
                         <div class="relative">
                             <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
                                 <option disabled selected>Veuillez choisir une place</option>
-                                <option v-for="parking in parkings" :value="parking.number">Place {{ parking.number }}</option>
+                                <option v-for="parking in parkingsAvailable" :value="parking.number">Place {{ parking.number }}</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -70,6 +70,7 @@ export default {
                 {number: 1, color: '#dd6b20'},
                 {number: 2, color: '#319795'}
             ],
+            parkingsAvailable: '',
             showModal: false,
             isEditing: false,
             isAdding: false,
@@ -99,6 +100,8 @@ export default {
             console.error(error)
         }
         this.isUserAuthorized()
+
+        this.parkingsAvailable = this.parkings
     },
     methods: {
         handleDateClick(arg) {
@@ -106,7 +109,7 @@ export default {
             if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
             if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
             if(this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
-            this.parkingsAvailable(arg.dateStr)
+            this.isParkingAvailable(arg.dateStr)
             this.date = arg.date
             this.isEditing = false
             this.isAdding = true
@@ -172,15 +175,16 @@ export default {
                 console.error(error)
             }
         },
-        parkingsAvailable(date) {
+        isParkingAvailable(date) {
             const dayClicked = this.calendarEvents.filter(event => event.start === date)
             if(dayClicked.length > 0) {
-                return this.parkings = this.parkings.filter(park => {
-                    const numberAvailable = dayClicked.find(day => day.parking_number !== park)
-                    if(numberAvailable) return numberAvailable.parking_number
+                return this.parkingsAvailable = this.parkings.filter(park => {
+                    const numberAvailable = dayClicked.find(day => day.parking_number !== park.number)
+                    console.log(numberAvailable, park)
+                    if(numberAvailable) return park.number !== numberAvailable.parking_number
                 })
             }
-            return this.parkings = [1, 2]
+            return this.parkingsAvailable = this.parkings
         },
         async isUserAuthorized() {
             try {
