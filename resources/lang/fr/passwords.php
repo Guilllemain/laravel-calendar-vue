@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'password' => "Le mot de passe doit être au minimum de 8 characters et être identique à l'email de confirmation.",
+    'password' => "Le mot de passe doit être au minimum de 8 caractères et être identique à l'email de confirmation.",
     'reset' => 'Votre mot de passe a été réinitialisé !',
     'sent' => 'Nous vous avons envoyé un email pour réinitialiser votre mot de passe !',
     'token' => 'Ce token est invalide.',

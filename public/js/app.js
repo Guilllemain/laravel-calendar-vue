@@ -14823,10 +14823,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -14844,7 +14840,13 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   data: function data() {
     return {
-      parkings: [1, 2],
+      parkings: [{
+        number: 1,
+        color: '#dd6b20'
+      }, {
+        number: 2,
+        color: '#319795'
+      }],
       showModal: false,
       isEditing: false,
       isAdding: false,
@@ -14917,6 +14919,11 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       this.showModal = true;
     },
     handleEventClick: function handleEventClick(arg) {
+      var clickedEvent = this.calendarEvents.find(function (event) {
+        return event.id === Number(arg.event.id);
+      });
+      if (clickedEvent.user_id === this.user.id && arg.event.start < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger');
+      if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger');
       this.isAdding = false;
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(arg.event.start).endOf('day') < moment__WEBPACK_IMPORTED_MODULE_4___default()()) return;
       this.getReservation(arg.event.id);
@@ -14977,30 +14984,36 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var _this2 = this;
 
-        var _ref3, data;
-
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
+                _context3.prev = 0;
+                _context3.next = 3;
                 return axios["delete"]("/api/reservation/".concat(this.selectedEvent.id, "?api_token=").concat(this.user.api_token));
 
-              case 2:
-                _ref3 = _context3.sent;
-                data = _ref3.data;
+              case 3:
+                _context3.next = 8;
+                break;
+
+              case 5:
+                _context3.prev = 5;
+                _context3.t0 = _context3["catch"](0);
+                console.error(_context3.t0);
+
+              case 8:
                 this.calendarEvents = this.calendarEvents.filter(function (event) {
                   return event.id !== _this2.selectedEvent.id;
                 });
                 this.isUserAuthorized();
                 this.closeModal();
 
-              case 7:
+              case 11:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee3, this, [[0, 5]]);
       }));
 
       function deleteEvent() {
@@ -15025,7 +15038,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       var _getReservation = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(id) {
-        var _ref4, data;
+        var _ref3, data;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
@@ -15036,8 +15049,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
                 return axios.get("/api/reservation/".concat(id, "?api_token=").concat(this.user.api_token));
 
               case 3:
-                _ref4 = _context4.sent;
-                data = _ref4.data;
+                _ref3 = _context4.sent;
+                data = _ref3.data;
 
                 if (!(data.user_id !== this.user.id)) {
                   _context4.next = 7;
@@ -15092,7 +15105,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       var _isUserAuthorized = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        var _ref5, data;
+        var _ref4, data;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
@@ -15103,8 +15116,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
                 return axios.get("/api/reservation/is-authorized/".concat(this.user.id, "?api_token=").concat(this.user.api_token));
 
               case 3:
-                _ref5 = _context5.sent;
-                data = _ref5.data;
+                _ref4 = _context5.sent;
+                data = _ref4.data;
 
                 if (data) {
                   _context5.next = 7;
@@ -15306,25 +15319,6 @@ exports.push([module.i, "/*!\nFullCalendar Day Grid Plugin v4.2.0\nDocs & Licens
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/@fullcalendar/timegrid/main.css":
-/*!********************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/@fullcalendar/timegrid/main.css ***!
-  \********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "/*!\nFullCalendar Time Grid Plugin v4.2.0\nDocs & License: https://fullcalendar.io/\n(c) 2019 Adam Shaw\n*/\n/* TimeGridView all-day area\n--------------------------------------------------------------------------------------------------*/\n.fc-timeGrid-view .fc-day-grid {\n  position: relative;\n  z-index: 2;\n  /* so the \"more..\" popover will be over the time grid */ }\n\n.fc-timeGrid-view .fc-day-grid .fc-row {\n  min-height: 3em;\n  /* all-day section will never get shorter than this */ }\n\n.fc-timeGrid-view .fc-day-grid .fc-row .fc-content-skeleton {\n  padding-bottom: 1em;\n  /* give space underneath events for clicking/selecting days */ }\n\n/* TimeGrid axis running down the side (for both the all-day area and the slot area)\n--------------------------------------------------------------------------------------------------*/\n.fc .fc-axis {\n  /* .fc to overcome default cell styles */\n  vertical-align: middle;\n  padding: 0 4px;\n  white-space: nowrap; }\n\n.fc-ltr .fc-axis {\n  text-align: right; }\n\n.fc-rtl .fc-axis {\n  text-align: left; }\n\n/* TimeGrid Structure\n--------------------------------------------------------------------------------------------------*/\n.fc-time-grid-container,\n.fc-time-grid {\n  /* so slats/bg/content/etc positions get scoped within here */\n  position: relative;\n  z-index: 1; }\n\n.fc-time-grid {\n  min-height: 100%;\n  /* so if height setting is 'auto', .fc-bg stretches to fill height */ }\n\n.fc-time-grid table {\n  /* don't put outer borders on slats/bg/content/etc */\n  border: 0 hidden transparent; }\n\n.fc-time-grid > .fc-bg {\n  z-index: 1; }\n\n.fc-time-grid .fc-slats,\n.fc-time-grid > hr {\n  /* the <hr> TimeGridView injects when grid is shorter than scroller */\n  position: relative;\n  z-index: 2; }\n\n.fc-time-grid .fc-content-col {\n  position: relative;\n  /* because now-indicator lives directly inside */ }\n\n.fc-time-grid .fc-content-skeleton {\n  position: absolute;\n  z-index: 3;\n  top: 0;\n  left: 0;\n  right: 0; }\n\n/* divs within a cell within the fc-content-skeleton */\n.fc-time-grid .fc-business-container {\n  position: relative;\n  z-index: 1; }\n\n.fc-time-grid .fc-bgevent-container {\n  position: relative;\n  z-index: 2; }\n\n.fc-time-grid .fc-highlight-container {\n  position: relative;\n  z-index: 3; }\n\n.fc-time-grid .fc-event-container {\n  position: relative;\n  z-index: 4; }\n\n.fc-time-grid .fc-now-indicator-line {\n  z-index: 5; }\n\n.fc-time-grid .fc-mirror-container {\n  /* also is fc-event-container */\n  position: relative;\n  z-index: 6; }\n\n/* TimeGrid Slats (lines that run horizontally)\n--------------------------------------------------------------------------------------------------*/\n.fc-time-grid .fc-slats td {\n  height: 1.5em;\n  border-bottom: 0;\n  /* each cell is responsible for its top border */ }\n\n.fc-time-grid .fc-slats .fc-minor td {\n  border-top-style: dotted; }\n\n/* TimeGrid Highlighting Slots\n--------------------------------------------------------------------------------------------------*/\n.fc-time-grid .fc-highlight-container {\n  /* a div within a cell within the fc-highlight-skeleton */\n  position: relative;\n  /* scopes the left/right of the fc-highlight to be in the column */ }\n\n.fc-time-grid .fc-highlight {\n  position: absolute;\n  left: 0;\n  right: 0;\n  /* top and bottom will be in by JS */ }\n\n/* TimeGrid Event Containment\n--------------------------------------------------------------------------------------------------*/\n.fc-ltr .fc-time-grid .fc-event-container {\n  /* space on the sides of events for LTR (default) */\n  margin: 0 2.5% 0 2px; }\n\n.fc-rtl .fc-time-grid .fc-event-container {\n  /* space on the sides of events for RTL */\n  margin: 0 2px 0 2.5%; }\n\n.fc-time-grid .fc-event,\n.fc-time-grid .fc-bgevent {\n  position: absolute;\n  z-index: 1;\n  /* scope inner z-index's */ }\n\n.fc-time-grid .fc-bgevent {\n  /* background events always span full width */\n  left: 0;\n  right: 0; }\n\n/* TimeGrid Event Styling\n----------------------------------------------------------------------------------------------------\nWe use the full \"fc-time-grid-event\" class instead of using descendants because the event won't\nbe a descendant of the grid when it is being dragged.\n*/\n.fc-time-grid-event {\n  margin-bottom: 1px; }\n\n.fc-time-grid-event-inset {\n  -webkit-box-shadow: 0px 0px 0px 1px #fff;\n  box-shadow: 0px 0px 0px 1px #fff; }\n\n.fc-time-grid-event.fc-not-start {\n  /* events that are continuing from another day */\n  /* replace space made by the top border with padding */\n  border-top-width: 0;\n  padding-top: 1px;\n  /* remove top rounded corners */\n  border-top-left-radius: 0;\n  border-top-right-radius: 0; }\n\n.fc-time-grid-event.fc-not-end {\n  /* replace space made by the top border with padding */\n  border-bottom-width: 0;\n  padding-bottom: 1px;\n  /* remove bottom rounded corners */\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0; }\n\n.fc-time-grid-event .fc-content {\n  overflow: hidden;\n  max-height: 100%; }\n\n.fc-time-grid-event .fc-time,\n.fc-time-grid-event .fc-title {\n  padding: 0 1px; }\n\n.fc-time-grid-event .fc-time {\n  font-size: .85em;\n  white-space: nowrap; }\n\n/* short mode, where time and title are on the same line */\n.fc-time-grid-event.fc-short .fc-content {\n  /* don't wrap to second line (now that contents will be inline) */\n  white-space: nowrap; }\n\n.fc-time-grid-event.fc-short .fc-time,\n.fc-time-grid-event.fc-short .fc-title {\n  /* put the time and title on the same line */\n  display: inline-block;\n  vertical-align: top; }\n\n.fc-time-grid-event.fc-short .fc-time span {\n  display: none;\n  /* don't display the full time text... */ }\n\n.fc-time-grid-event.fc-short .fc-time:before {\n  content: attr(data-start);\n  /* ...instead, display only the start time */ }\n\n.fc-time-grid-event.fc-short .fc-time:after {\n  content: \"\\A0-\\A0\";\n  /* seperate with a dash, wrapped in nbsp's */ }\n\n.fc-time-grid-event.fc-short .fc-title {\n  font-size: .85em;\n  /* make the title text the same size as the time */\n  padding: 0;\n  /* undo padding from above */ }\n\n/* resizer (cursor device) */\n.fc-time-grid-event.fc-allow-mouse-resize .fc-resizer {\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 8px;\n  overflow: hidden;\n  line-height: 8px;\n  font-size: 11px;\n  font-family: monospace;\n  text-align: center;\n  cursor: s-resize; }\n\n.fc-time-grid-event.fc-allow-mouse-resize .fc-resizer:after {\n  content: \"=\"; }\n\n/* resizer (touch device) */\n.fc-time-grid-event.fc-selected .fc-resizer {\n  /* 10x10 dot */\n  border-radius: 5px;\n  border-width: 1px;\n  width: 8px;\n  height: 8px;\n  border-style: solid;\n  border-color: inherit;\n  background: #fff;\n  /* horizontally center */\n  left: 50%;\n  margin-left: -5px;\n  /* center on the bottom edge */\n  bottom: -5px; }\n\n/* Now Indicator\n--------------------------------------------------------------------------------------------------*/\n.fc-time-grid .fc-now-indicator-line {\n  border-top-width: 1px;\n  left: 0;\n  right: 0; }\n\n/* arrow on axis */\n.fc-time-grid .fc-now-indicator-arrow {\n  margin-top: -5px;\n  /* vertically center on top coordinate */ }\n\n.fc-ltr .fc-time-grid .fc-now-indicator-arrow {\n  left: 0;\n  /* triangle pointing right... */\n  border-width: 5px 0 5px 6px;\n  border-top-color: transparent;\n  border-bottom-color: transparent; }\n\n.fc-rtl .fc-time-grid .fc-now-indicator-arrow {\n  right: 0;\n  /* triangle pointing left... */\n  border-width: 5px 6px 5px 0;\n  border-top-color: transparent;\n  border-bottom-color: transparent; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Calendar.vue?vue&type=style&index=0&lang=scss&":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Calendar.vue?vue&type=style&index=0&lang=scss& ***!
@@ -15336,7 +15330,6 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 // imports
 exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!@fullcalendar/core/main.css */ "./node_modules/css-loader/index.js!./node_modules/@fullcalendar/core/main.css"), "");
 exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!@fullcalendar/daygrid/main.css */ "./node_modules/css-loader/index.js!./node_modules/@fullcalendar/daygrid/main.css"), "");
-exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!@fullcalendar/timegrid/main.css */ "./node_modules/css-loader/index.js!./node_modules/@fullcalendar/timegrid/main.css"), "");
 
 // module
 exports.push([module.i, ".demo-app-calendar {\n  margin: 0 auto;\n  max-width: 900px;\n}\n.modal__content {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n}\n.fc-content {\n  text-align: center;\n}\n.fc-day-grid-event {\n  padding: 0.5rem;\n  cursor: pointer;\n  transition: all 0.2s ease-in-out;\n}\n.fc-day-grid-event:hover {\n  transform: scale(0.97);\n}\n.fc-button-primary {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:disabled {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:hover {\n  background-color: #6b46c1;\n  border-color: #6b46c1;\n}\n.fc-button-primary:not(:disabled):active {\n  background-color: #553c9a;\n  border-color: #553c9a;\n}\n.fc-button-primary:focus {\n  box-shadow: none;\n}\n.fc-button-primary:not(:disabled):active:focus {\n  outline: none;\n  box-shadow: none;\n}", ""]);
@@ -35015,7 +35008,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "text-gray-600 mt-2" }, [
                       _vm._v(
-                        "Parking " +
+                        "Place " +
                           _vm._s(_vm.selectedEvent.parking_number) +
                           " réservé le " +
                           _vm._s(_vm.formatDate(_vm.selectedEvent.date)) +
@@ -35096,14 +35089,14 @@ var render = function() {
                               _c(
                                 "option",
                                 { attrs: { disabled: "", selected: "" } },
-                                [_vm._v("Veuillez choisir un parking")]
+                                [_vm._v("Veuillez choisir une place")]
                               ),
                               _vm._v(" "),
                               _vm._l(_vm.parkings, function(parking) {
                                 return _c(
                                   "option",
-                                  { domProps: { value: parking } },
-                                  [_vm._v("Parking " + _vm._s(parking))]
+                                  { domProps: { value: parking.number } },
+                                  [_vm._v("Place " + _vm._s(parking.number))]
                                 )
                               })
                             ],
@@ -35172,29 +35165,27 @@ var render = function() {
         on: { dateClick: _vm.handleDateClick, eventClick: _vm.handleEventClick }
       }),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "div",
+        { staticClass: "flex justify-center m-4" },
+        _vm._l(_vm.parkings, function(parking) {
+          return _c("div", { staticClass: "flex items-center mr-8" }, [
+            _c("span", {
+              staticClass: "h-4 w-8 block mr-2",
+              style: { backgroundColor: parking.color }
+            }),
+            _vm._v(
+              "\n            Place " + _vm._s(parking.number) + "\n        "
+            )
+          ])
+        }),
+        0
+      )
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex justify-center m-4" }, [
-      _c("div", { staticClass: "flex items-center mr-8" }, [
-        _c("span", { staticClass: "bg-orange-600 h-4 w-8 block mr-2" }),
-        _vm._v("\n            Parking 1\n        ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex items-center" }, [
-        _c("span", { staticClass: "bg-teal-600 h-4 w-8 block mr-2" }),
-        _vm._v("\n            Parking 2\n        ")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

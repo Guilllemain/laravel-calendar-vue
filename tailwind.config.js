@@ -27,6 +27,13 @@ module.exports = {
                     },
                     '&:active': {
                         transform: 'scale(.95) translateY(4px)'
+                    },
+                    '&:disabled': {
+                        opacity: .4,
+                        cursor: 'not-allowed'
+                    },
+                    '&:disabled:hover': {
+                        backgroundColor: '#9f7aea'
                     }
                 }
             }

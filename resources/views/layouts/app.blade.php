@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @yield('scripts')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -23,7 +24,7 @@
     <div id="app">
         <nav class="navbar">
                 <a class="navbar-title" href="{{ url('/') }}">
-                    Planning parkings CNE
+                    Planning parking CNE
                 </a>
 
                     <!-- Right Side Of Navbar -->

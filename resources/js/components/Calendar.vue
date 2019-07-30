@@ -4,7 +4,7 @@
             <div class="modal__content">
                 <template v-if="isEditing">
                     <h3 class="font-bold">{{ user.fullname }}</h3>
-                    <div class="text-gray-600 mt-2">Parking {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
+                    <div class="text-gray-600 mt-2">Place {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
                     <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
                 </template>
                 <template v-if="isAdding">
@@ -12,8 +12,8 @@
                     <form @submit.prevent="addEvent" method="POST">
                         <div class="relative">
                             <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
-                                <option disabled selected>Veuillez choisir un parking</option>
-                                <option v-for="parking in parkings" :value="parking">Parking {{ parking }}</option>
+                                <option disabled selected>Veuillez choisir une place</option>
+                                <option v-for="parking in parkings" :value="parking.number">Place {{ parking.number }}</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -38,13 +38,9 @@
             @eventClick="handleEventClick"
         />
         <div class="flex justify-center m-4">
-            <div class="flex items-center mr-8">
-                <span class="bg-orange-600 h-4 w-8 block mr-2"></span>
-                Parking 1
-            </div>
-            <div class="flex items-center">
-                <span class="bg-teal-600 h-4 w-8 block mr-2"></span>
-                Parking 2
+            <div class="flex items-center mr-8" v-for="parking in parkings">
+                <span class="h-4 w-8 block mr-2" :style="{ backgroundColor: parking.color}"></span>
+                Place {{parking.number}}
             </div>
         </div>
     </div>
@@ -70,7 +66,10 @@ export default {
     },
     data: function() {
         return {
-            parkings: [1, 2],
+            parkings: [
+                {number: 1, color: '#dd6b20'},
+                {number: 2, color: '#319795'}
+            ],
             showModal: false,
             isEditing: false,
             isAdding: false,
@@ -114,6 +113,9 @@ export default {
             this.showModal = true
         },
         handleEventClick(arg) {
+            const clickedEvent = this.calendarEvents.find(event => event.id === Number(arg.event.id))
+            if (clickedEvent.user_id === this.user.id && arg.event.start < moment().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger')
+            if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger')
             this.isAdding = false
             if (moment(arg.event.start).endOf('day') < moment()) return
             this.getReservation(arg.event.id)
@@ -137,7 +139,11 @@ export default {
             this.showModal = false
         },
         async deleteEvent() {
-            const { data } = await axios.delete(`/api/reservation/${this.selectedEvent.id}?api_token=${this.user.api_token}`)
+            try {
+                await axios.delete(`/api/reservation/${this.selectedEvent.id}?api_token=${this.user.api_token}`)
+            } catch (error) {
+                console.error(error)
+            }
             this.calendarEvents = this.calendarEvents.filter(event => event.id !== this.selectedEvent.id)
             
             this.isUserAuthorized()
@@ -203,14 +209,13 @@ export default {
             this.selectedEvent = ''
         }
     }
-};
+}
 </script>
 
 <style lang='scss'>
 // paths prefixed with ~ signify node_modules
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
-@import "~@fullcalendar/timegrid/main.css";
 .demo-app-calendar {
     margin: 0 auto;
     max-width: 900px;
