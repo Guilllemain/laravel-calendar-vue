@@ -32,7 +32,7 @@
                 </label>
             <div class="">
                 <input
-                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('lastname') is-invalid @enderror"
+                    class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('lastname')is-invalid @enderror"
                     id="lastname" type="text" name="lastname" value="{{ old('lastname') }}" required>
 
                 @error('lastname')
