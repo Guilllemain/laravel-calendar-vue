@@ -15339,7 +15339,7 @@ exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!@fullcalend
 exports.i(__webpack_require__(/*! -!../../../node_modules/css-loader!@fullcalendar/timegrid/main.css */ "./node_modules/css-loader/index.js!./node_modules/@fullcalendar/timegrid/main.css"), "");
 
 // module
-exports.push([module.i, ".demo-app-calendar {\n  margin: 0 auto;\n  max-width: 900px;\n}\n.modal__content {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n}\n.fc-content {\n  text-align: center;\n}\n.fc-day-grid-event {\n  padding: 0.5rem;\n}\n.fc-button-primary {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:disabled {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:hover {\n  background-color: #6b46c1;\n  border-color: #6b46c1;\n}\n.fc-button-primary:not(:disabled):active {\n  background-color: #553c9a;\n  border-color: #553c9a;\n}\n.fc-button-primary:focus {\n  box-shadow: none;\n}\n.fc-button-primary:not(:disabled):active:focus {\n  outline: none;\n  box-shadow: none;\n}", ""]);
+exports.push([module.i, ".demo-app-calendar {\n  margin: 0 auto;\n  max-width: 900px;\n}\n.modal__content {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n}\n.fc-content {\n  text-align: center;\n}\n.fc-day-grid-event {\n  padding: 0.5rem;\n  cursor: pointer;\n  transition: all 0.2s ease-in-out;\n}\n.fc-day-grid-event:hover {\n  transform: scale(0.97);\n}\n.fc-button-primary {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:disabled {\n  background-color: #44337a;\n  border-color: #44337a;\n}\n.fc-button-primary:hover {\n  background-color: #6b46c1;\n  border-color: #6b46c1;\n}\n.fc-button-primary:not(:disabled):active {\n  background-color: #553c9a;\n  border-color: #553c9a;\n}\n.fc-button-primary:focus {\n  box-shadow: none;\n}\n.fc-button-primary:not(:disabled):active:focus {\n  outline: none;\n  box-shadow: none;\n}", ""]);
 
 // exports
 
@@ -15358,7 +15358,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".alert-flash[data-v-a4a130d0] {\n  padding: .75rem 1.25rem;\n  margin-bottom: 1rem;\n  border: 1px solid transparent;\n  border-radius: .25rem;\n  position: fixed;\n  right: 2.5rem;\n  top: 2rem;\n}\n.alert-danger[data-v-a4a130d0] {\n  color: #721c24;\n  background-color: #f8d7da;\n  border-color: #f5c6cb;\n}\n.alert-success[data-v-a4a130d0] {\n  color: #155724;\n  background-color: #d4edda;\n  border-color: #c3e6cb;\n}\n.alert-info[data-v-a4a130d0] {\n  color: #004085;\n  background-color: #cce5ff;\n  border-color: #b8daff;\n}\n.alert-warning[data-v-a4a130d0] {\n  color: #856404;\n  background-color: #fff3cd;\n  border-color: #ffeeba;\n}\n.slide-enter[data-v-a4a130d0], .slide-leave-to[data-v-a4a130d0] {\n  opacity: .2;\n  transform: translateX(25rem);\n}\n.slide-enter-active[data-v-a4a130d0], .slide-leave-active[data-v-a4a130d0] {\n  transition: all .3s ease-in-out;\n}\n", ""]);
+exports.push([module.i, ".alert-flash[data-v-a4a130d0] {\n  padding: .75rem 1.25rem;\n  margin-bottom: 1rem;\n  border: 1px solid transparent;\n  border-radius: .25rem;\n  position: fixed;\n  right: 2.5rem;\n  top: 6rem;\n}\n.alert-danger[data-v-a4a130d0] {\n  color: white;\n  background-color: #a50202;\n  border-color: #93242f;\n}\n.alert-success[data-v-a4a130d0] {\n  color: #155724;\n  background-color: #d4edda;\n  border-color: #c3e6cb;\n}\n.alert-info[data-v-a4a130d0] {\n  color: #004085;\n  background-color: #cce5ff;\n  border-color: #b8daff;\n}\n.alert-warning[data-v-a4a130d0] {\n  color: #856404;\n  background-color: #fff3cd;\n  border-color: #ffeeba;\n}\n.slide-enter[data-v-a4a130d0], .slide-leave-to[data-v-a4a130d0] {\n  opacity: .2;\n  transform: translateX(25rem);\n}\n.slide-enter-active[data-v-a4a130d0], .slide-leave-active[data-v-a4a130d0] {\n  transition: all .3s ease-in-out;\n}\n", ""]);
 
 // exports
 
@@ -15377,7 +15377,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".modal[data-v-4b2d100a] {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 10;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgba(0, 0, 0, .85);\n  transition: all .4s ease-in-out;\n}\n.close__icon[data-v-4b2d100a] {\n  position: absolute;\n  top: 1rem;\n  right: 1.5rem;\n  opacity: .8;\n  cursor: pointer;\n}\n.close__icon[data-v-4b2d100a]:hover,\n.close__icon[data-v-4b2d100a]:focus {\n  opacity: 1;\n}\n.close__icon[data-v-4b2d100a]:hover {\n  transform: scale(1.1);\n}\n.icon__svg[data-v-4b2d100a] {\n  color: white;\n  fill: currentColor;\n  height: 2rem;\n  width: 2rem;\n}\n.fade-enter-active[data-v-4b2d100a], .fade-leave-active[data-v-4b2d100a] {\n  transition: opacity .2s;\n}\n.fade-enter[data-v-4b2d100a], .fade-leave-to[data-v-4b2d100a] {\n  opacity: 0;\n}\n.scale-enter-active[data-v-4b2d100a] {\n  -webkit-animation: scaleIn-data-v-4b2d100a .2s ease-in-out forwards;\n          animation: scaleIn-data-v-4b2d100a .2s ease-in-out forwards;\n}\n.scale-leave-active[data-v-4b2d100a] {\n  -webkit-animation: scaleOut-data-v-4b2d100a .2s ease-in-out forwards;\n          animation: scaleOut-data-v-4b2d100a .2s ease-in-out forwards;\n}\n@-webkit-keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0; transform: scale(.75);\n}\n100% {\n    opacity: 1;\n    transform: scale(1);\n}\n}\n@keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0; transform: scale(.75);\n}\n100% {\n    opacity: 1;\n    transform: scale(1);\n}\n}\n@-webkit-keyframes scaleOut-data-v-4b2d100a {\n0% {\n    opacity: 1;\n    transform: scale(1);\n}\n100% {\n    opacity: 0; transform: scale(.75);\n}\n}\n@keyframes scaleOut-data-v-4b2d100a {\n0% {\n    opacity: 1;\n    transform: scale(1);\n}\n100% {\n    opacity: 0; transform: scale(.75);\n}\n}\n", ""]);
+exports.push([module.i, ".modal[data-v-4b2d100a] {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 10;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgba(0, 0, 0, .85);\n  transition: all .4s ease-in-out;\n}\n.close__icon[data-v-4b2d100a] {\n  position: absolute;\n  top: 1rem;\n  right: 1.2rem;\n  opacity: .8;\n  cursor: pointer;\n  z-index: 20;\n  transition: all .2s;\n}\n.close__icon[data-v-4b2d100a]:hover,\n.close__icon[data-v-4b2d100a]:focus {\n  opacity: 1;\n}\n.close__icon[data-v-4b2d100a]:hover {\n  transform: scale(1.05);\n}\n.icon__svg[data-v-4b2d100a] {\n  height: 1.3rem;\n  width: 1.3rem;\n}\n.fade-enter-active[data-v-4b2d100a], .fade-leave-active[data-v-4b2d100a] {\n  transition: opacity .2s;\n}\n.fade-enter[data-v-4b2d100a], .fade-leave-to[data-v-4b2d100a] {\n  opacity: 0;\n}\n.scale-enter-active[data-v-4b2d100a] {\n  -webkit-animation: scaleIn-data-v-4b2d100a .2s ease-in-out forwards;\n          animation: scaleIn-data-v-4b2d100a .2s ease-in-out forwards;\n}\n.scale-leave-active[data-v-4b2d100a] {\n  -webkit-animation: scaleOut-data-v-4b2d100a .2s ease-in-out forwards;\n          animation: scaleOut-data-v-4b2d100a .2s ease-in-out forwards;\n}\n@-webkit-keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0; transform: scale(.75);\n}\n100% {\n    opacity: 1;\n    transform: scale(1);\n}\n}\n@keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0; transform: scale(.75);\n}\n100% {\n    opacity: 1;\n    transform: scale(1);\n}\n}\n@-webkit-keyframes scaleOut-data-v-4b2d100a {\n0% {\n    opacity: 1;\n    transform: scale(1);\n}\n100% {\n    opacity: 0; transform: scale(.75);\n}\n}\n@keyframes scaleOut-data-v-4b2d100a {\n0% {\n    opacity: 1;\n    transform: scale(1);\n}\n100% {\n    opacity: 0; transform: scale(.75);\n}\n}\n", ""]);
 
 // exports
 
@@ -35258,22 +35258,6 @@ var render = function() {
         "div",
         { staticClass: "modal", on: { click: _vm.closeModal } },
         [
-          _c("span", { staticClass: "close__icon" }, [
-            _c(
-              "svg",
-              {
-                staticClass: "icon__svg",
-                attrs: { xmlns: "http://www.w3.org/2000/svg" }
-              },
-              [
-                _c("use", {
-                  staticClass: "text-white fill-current",
-                  attrs: { href: "/svg/icons.svg#close" }
-                })
-              ]
-            )
-          ]),
-          _vm._v(" "),
           _c("transition", { attrs: { name: "scale" } }, [
             _c(
               "div",
@@ -35286,6 +35270,7 @@ var render = function() {
                     expression: "viewContent"
                   }
                 ],
+                staticClass: "relative",
                 style: { width: _vm.contentWidth },
                 on: {
                   click: function($event) {
@@ -35293,7 +35278,29 @@ var render = function() {
                   }
                 }
               },
-              [_vm._t("default")],
+              [
+                _c(
+                  "span",
+                  { staticClass: "close__icon", on: { click: _vm.closeModal } },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "icon__svg",
+                        attrs: { xmlns: "http://www.w3.org/2000/svg" }
+                      },
+                      [
+                        _c("use", {
+                          staticClass: "text-grey fill-current",
+                          attrs: { href: "/svg/icons.svg#close" }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._t("default")
+              ],
               2
             )
           ])

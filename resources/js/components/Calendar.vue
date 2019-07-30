@@ -229,6 +229,12 @@ export default {
 }
 .fc-day-grid-event {
     padding: .5rem;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+
+    &:hover {
+        transform: scale(0.97);
+    }
 }
 .fc-button-primary {
     background-color: #44337a;

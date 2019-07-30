@@ -29,7 +29,7 @@
             <div class="">
                 <input
                     class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('lastname') is-invalid @enderror"
-                    id="lastname" type="text" name="lastname" required>
+                    id="lastname" type="text" name="lastname" value="{{ old('lastname') }}" required>
 
                 @error('lastname')
                 <span class="text-xs text-red-600" role="alert">
@@ -46,7 +46,7 @@
             <div class="">
                 <input
                     class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('email') is-invalid @enderror"
-                    id="email" type="email" name="email" required>
+                    id="email" type="email" name="email" value="{{ old('email') }}" required>
 
                 @error('email')
                 <span class="text-xs text-red-600" role="alert">
@@ -63,7 +63,7 @@
             <div class="">
                 <input
                     class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('password') is-invalid @enderror"
-                    id="password" type="password" name="password" required>
+                    id="password" type="password" name="password" value="{{ old('password') }}" required>
 
                 @error('password')
                 <span class="text-xs text-red-600" role="alert">
@@ -80,7 +80,7 @@
             <div class="">
                 <input
                     class="bg-gray-200 appearance-none border border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 @error('password_confirmation') is-invalid @enderror"
-                    id="password_confirmation" type="password" name="password_confirmation" required>
+                    id="password_confirmation" type="password" name="password_confirmation" value="{{ old('password_confirmation') }}" required>
 
                 @error('password_confirmation')
                 <span class="text-xs text-red-600" role="alert">

@@ -1,13 +1,13 @@
 <template>
     <transition name="fade" @after-enter="openModal">
         <div class="modal" @click="closeModal">
-            <span class="close__icon">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
-                    <use class="text-white fill-current" href="/svg/icons.svg#close"></use>
-                </svg>
-            </span>
             <transition name="scale">
-                <div :style="{ width: contentWidth }" @click.stop v-show="viewContent">
+                <div :style="{ width: contentWidth }" @click.stop v-show="viewContent" class="relative">
+                    <span class="close__icon" @click="closeModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
+                            <use class="text-grey fill-current" href="/svg/icons.svg#close"></use>
+                        </svg>
+                    </span>
                     <slot></slot>
                 </div>
             </transition>
@@ -61,9 +61,11 @@ export default {
     .close__icon {
         position: absolute;
         top: 1rem;
-        right: 1.5rem;
+        right: 1.2rem;
         opacity: .8;
         cursor: pointer;
+        z-index: 20;
+        transition: all .2s;
     }
 
     .close__icon:hover,
@@ -72,14 +74,12 @@ export default {
     }
 
     .close__icon:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
 
     .icon__svg {
-        color: white;
-        fill: currentColor;
-        height: 2rem;
-        width: 2rem;
+        height: 1.3rem;
+        width: 1.3rem;
     }
 
     .fade-enter-active, .fade-leave-active {

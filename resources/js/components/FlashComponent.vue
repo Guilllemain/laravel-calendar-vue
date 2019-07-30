@@ -51,12 +51,12 @@
         border-radius: .25rem;
         position: fixed;
         right: 2.5rem;
-        top: 2rem;
+        top: 6rem;
     }
     .alert-danger {
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
+        color: white;
+        background-color: #a50202;
+        border-color: #93242f;
     }
     .alert-success {
         color: #155724;
