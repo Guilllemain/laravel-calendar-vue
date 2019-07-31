@@ -7,6 +7,14 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+
+// generate the global flash method to display flash messages
+window.Event = new Vue();
+
+window.flash = function (message, level = 'success') {
+    window.Event.$emit('flash', { message, level });
+};
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -17,13 +25,6 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
-window.Event = new Vue();
-
-window.flash = function (message, level = 'success') {
-    window.Event.$emit('flash', { message, level });
-};
-
 
 Vue.component('flash-component', require('./components/FlashComponent.vue').default);
 Vue.component('vue-calendar', require('./components/Calendar.vue').default);

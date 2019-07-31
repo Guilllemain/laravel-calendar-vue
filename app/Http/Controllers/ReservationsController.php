@@ -8,6 +8,7 @@ use App\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use App\Http\Resources\Reservation as ReservationResource;
+use App\Http\Requests\ReservationRequest;
 
 class ReservationsController extends Controller
 {
@@ -21,16 +22,8 @@ class ReservationsController extends Controller
         return Reservation::all();
     }
 
-    public function store(Request $request)
+    public function store(ReservationRequest $request)
     {
-        // if the requested date is in more than a week time, return
-        if ($request->date > now()->startOfDay()->addDays('7')) {
-            return;
-        }
-        // if the requested date is in the past, return
-        if ($request->date < now()->subDays('1')->startOfDay()) {
-            return;
-        }
         $reservations_at_requested_date = Reservation::where('date', $request->date)->get();
         
         // check if day is full

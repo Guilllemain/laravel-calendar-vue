@@ -1,9 +1,9 @@
 <template>
     <transition name="fade" @after-enter="openModal">
-        <div class="modal" @click="closeModal">
+        <div class="modal" @click="hideModal">
             <transition name="scale">
                 <div :style="{ width: contentWidth }" @click.stop v-show="viewContent" class="relative">
-                    <span class="close__icon" @click="closeModal">
+                    <span class="close__icon" @click="hideModal">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
                             <use class="text-grey fill-current" href="/svg/icons.svg#close"></use>
                         </svg>
@@ -32,10 +32,8 @@ export default {
     methods: {
         openModal() {
             this.viewContent = true;
-            document.body.classList.add('overflow-hidden'); // prevent scrolling in the background
         },
-        closeModal() {
-            document.body.classList.remove('overflow-hidden');
+        hideModal() {
             this.viewContent = false;
             this.$emit('hideModal');
         },

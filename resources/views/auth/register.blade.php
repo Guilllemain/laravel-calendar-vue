@@ -54,6 +54,12 @@
                 <span hidden class="email-error text-xs text-red-600" role="alert">
                     <strong></strong>
                 </span>
+
+                @error('email')
+                <span class="text-xs text-red-600" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
         </div>
         
@@ -69,6 +75,12 @@
                 <span hidden class="password-error text-xs text-red-600" role="alert">
                     <strong></strong>
                 </span>
+
+                @error('password')
+                <span class="text-xs text-red-600" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
         </div>
 
@@ -84,6 +96,12 @@
                 <span hidden class="password_confirmation-error text-xs text-red-600" role="alert">
                     <strong></strong>
                 </span>
+
+                @error('password_confirmation')
+                <span class="text-xs text-red-600" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
             </div>
         </div>
 

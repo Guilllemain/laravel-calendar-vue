@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div @click="addBackground">
         <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
             <div class="modal__content">
                 <template v-if="isEditing">
@@ -30,6 +30,9 @@
             defaultView="dayGridMonth"
             timeZone="Europe/Paris"
             locale="fr"
+            :header="{
+              right: 'prev,next'
+            }"
             :firstDay=1
             :plugins="calendarPlugins"
             :weekends="calendarWeekends"
@@ -83,7 +86,7 @@ export default {
             calendarEvents: []
         };
     },
-    async mounted() {
+    async created() {
         try {
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
@@ -99,16 +102,28 @@ export default {
         } catch (error) {
             console.error(error)
         }
-        this.isUserAuthorized()
 
         this.parkingsAvailable = this.parkings
     },
+    watch: {
+        async calendarEvents(val) {
+            setTimeout(() => {
+                this.addBackground()
+            }, 100)
+            try {
+                const { data } = await axios.get(`/api/reservation/is-authorized/${this.user.id}?api_token=${this.user.api_token}`)
+                if (!data) {
+                    return this.isAuthorized = false
+                }
+                return this.isAuthorized = true
+            } catch (error) {
+                console.error(error)
+            }            
+        }
+    },
     methods: {
         handleDateClick(arg) {
-            if (arg.date < moment().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger')
-            if (moment(arg.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
-            if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
-            if(this.isDayFull(arg.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            if (!this.isRequestValid(arg)) return
             this.isParkingAvailable(arg.dateStr)
             this.date = arg.date
             this.isEditing = false
@@ -116,40 +131,31 @@ export default {
             this.showModal = true
         },
         handleEventClick(arg) {
-            const clickedEvent = this.calendarEvents.find(event => event.id === Number(arg.event.id))
-            if (clickedEvent.user_id === this.user.id && arg.event.start < moment().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger')
-            if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger')
+            if (!this.isEventEditable(arg)) return
             this.isAdding = false
-            if (moment(arg.event.start).endOf('day') < moment()) return
             this.getReservation(arg.event.id)
         },
         async addEvent(event) {
-            console.log(event)
-            const parking_number = this.parking_number
-            
             try {
                 const { data } = await axios.post('/api/reservation', {
-                    parking_number: parking_number,
+                    parking_number: this.parking_number,
                     date: moment(this.date).format('YYYY-MM-DD'),
                     api_token: this.user.api_token
                 })
-                this.pushEvent(data, this.user.fullname, this.date, parking_number, this.user.id, this.user.email)
+                this.pushEvent(data, this.user.fullname, this.date, this.parking_number, this.user.id, this.user.email)
             } catch (error) {
                 console.error(error)
             }
-            
-            this.isUserAuthorized()
             this.showModal = false
         },
         async deleteEvent() {
+            if (this.user.id !== this.selectedEvent.user_id) return
             try {
                 await axios.delete(`/api/reservation/${this.selectedEvent.id}?api_token=${this.user.api_token}`)
             } catch (error) {
                 console.error(error)
             }
             this.calendarEvents = this.calendarEvents.filter(event => event.id !== this.selectedEvent.id)
-            
-            this.isUserAuthorized()
             this.closeModal()
         },
         pushEvent(id, title, start, parking_number, user_id, email) {
@@ -158,7 +164,7 @@ export default {
                 title,
                 start,
                 allDay: true,
-                color: parking_number === 1 ? "#dd6b20" : "#319795",
+                color: this.parkings.find(el => el.number === parking_number).color,
                 parking_number,
                 user_id,
                 email
@@ -186,23 +192,25 @@ export default {
             }
             return this.parkingsAvailable = this.parkings
         },
-        async isUserAuthorized() {
-            try {
-                const { data } = await axios.get(`/api/reservation/is-authorized/${this.user.id}?api_token=${this.user.api_token}`)
-                if (!data) {
-                    return this.isAuthorized = false
-                }
-                return this.isAuthorized = true
-            } catch (error) {
-                console.error(error)
-            }
-        },
         formatDate(date) {
             return moment(date).format('dddd D MMMM')
         },
+        isRequestValid(request) {
+            if (request.date < moment().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger')
+            if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
+            if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
+            if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            return true
+        },
+        isEventEditable(request) {
+            const clickedEvent = this.calendarEvents.find(event => event.id === Number(request.event.id))
+            if (clickedEvent.user_id === this.user.id && request.event.start < moment().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger')
+            if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger')
+            return true
+        },
         isDayFull(date) {
             if (this.calendarEvents
-                            .filter(event => moment(event.start).format('YYYY-MM-D') === moment(date).format('YYYY-MM-D')).length >= 2) {
+                            .filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length >= 2) {
                                 return true
                             }
             return false
@@ -211,15 +219,19 @@ export default {
             this.showModal = false
             this.editEvent = false
             this.selectedEvent = ''
+            setTimeout(() => {
+                this.addBackground()
+            }, 100);
+        },
+        addBackground() {
+            const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
+            unavailableTiles.forEach(tile => tile.style.background = '#f7fafc')
         }
     }
 }
 </script>
 
 <style lang='scss'>
-// paths prefixed with ~ signify node_modules
-@import "~@fullcalendar/core/main.css";
-@import "~@fullcalendar/daygrid/main.css";
 .demo-app-calendar {
     margin: 0 auto;
     max-width: 900px;
@@ -230,47 +242,5 @@ export default {
     padding: 3rem;
     display: flex;
     flex-direction: column;
-}
-
-// overwrite default style
-.fc-content {
-    text-align: center;
-}
-.fc-day-grid-event {
-    padding: .5rem;
-    cursor: pointer;
-    transition: all .2s ease-in-out;
-
-    &:hover {
-        transform: scale(0.97);
-    }
-}
-.fc-button-primary {
-    background-color: #44337a;
-    border-color: #44337a;
-
-    &:disabled {
-        background-color: #44337a;
-        border-color: #44337a;
-    }
-
-    &:hover {
-        background-color: #6b46c1;
-        border-color: #6b46c1;
-    }
-
-    &:not(:disabled):active {
-        background-color: #553c9a;
-        border-color: #553c9a;
-    }
-
-    &:focus {
-        box-shadow: none;
-    }
-
-    &:not(:disabled):active:focus {
-        outline: none;
-        box-shadow: none;
-    }
 }
 </style>

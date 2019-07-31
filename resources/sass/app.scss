@@ -4,6 +4,7 @@
 // Variables
 @import 'variables';
 @import 'tailwind';
+@import 'calendar';
 
 .is-invalid {
     border-color: #e53e3e !important;
@@ -12,6 +13,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 ul {
@@ -35,7 +37,7 @@ body {
 }
 
 .navbar {
-    background-color: $main-color;
+    background-color: $purple-500;
     display: flex;
     justify-content: space-between;
     padding: 1rem 2rem;

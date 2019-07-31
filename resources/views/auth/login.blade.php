@@ -55,7 +55,7 @@
 				Se connecter
 		</button>
 		<div class="mt-2">
-			<a class="text-sm text-gray-500 font-bold" href="{{ route('password.request') }}">
+			<a class="hover:text-gray-700 text-sm text-gray-500 font-bold" href="{{ route('password.request') }}">
 				Mot de passe oublié ?
 			</a>
 		</div>

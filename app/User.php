@@ -53,11 +53,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->firstname . ' ' . $this->lastname;
     }
 
+    //overwrite the sendEmailVerificationNotification method
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailNotification);
     }
 
+    //overwrite the sendPasswordResetNotification method
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
