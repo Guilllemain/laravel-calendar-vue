@@ -14982,6 +14982,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       this.showModal = true;
     },
     handleEventClick: function handleEventClick(arg) {
+      this.selectedEvent = '';
       if (!this.isEventEditable(arg)) return;
       this.isAdding = false;
       this.getReservation(arg.event.id);
@@ -15198,7 +15199,6 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
       this.showModal = false;
       this.editEvent = false;
-      this.selectedEvent = '';
       setTimeout(function () {
         _this4.addBackground();
       }, 100);
@@ -15338,7 +15338,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".demo-app-calendar {\n  margin: 0 auto;\n  max-width: 900px;\n}\n.modal__content {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n}", ""]);
+exports.push([module.i, ".demo-app-calendar {\n  margin: 0 3%;\n  max-width: 900px;\n}\n.modal__content {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n}", ""]);
 
 // exports
 
@@ -34985,7 +34985,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { on: { click: _vm.addBackground } },
+    {
+      staticClass: "flex flex-col items-center",
+      on: { click: _vm.addBackground }
+    },
     [
       _c(
         "modal-component",

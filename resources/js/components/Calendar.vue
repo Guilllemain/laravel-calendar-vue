@@ -1,5 +1,5 @@
 <template>
-    <div @click="addBackground">
+    <div @click="addBackground" class="flex flex-col items-center">
         <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
             <div class="modal__content">
                 <template v-if="isEditing">
@@ -131,6 +131,7 @@ export default {
             this.showModal = true
         },
         handleEventClick(arg) {
+            this.selectedEvent = ''
             if (!this.isEventEditable(arg)) return
             this.isAdding = false
             this.getReservation(arg.event.id)
@@ -218,7 +219,6 @@ export default {
         closeModal() {
             this.showModal = false
             this.editEvent = false
-            this.selectedEvent = ''
             setTimeout(() => {
                 this.addBackground()
             }, 100);
@@ -233,7 +233,7 @@ export default {
 
 <style lang='scss'>
 .demo-app-calendar {
-    margin: 0 auto;
+    margin: 0 3%;
     max-width: 900px;
 }
 
