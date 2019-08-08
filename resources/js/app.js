@@ -27,7 +27,7 @@ window.flash = function (message, level = 'success') {
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('flash-component', require('./components/FlashComponent.vue').default);
-Vue.component('vue-calendar', require('./components/Calendar.vue').default);
+Vue.component('app-component', require('./components/AppComponent.vue').default);
 Vue.component('modal-component', require('./components/ModalComponent.vue').default);
 
 /**

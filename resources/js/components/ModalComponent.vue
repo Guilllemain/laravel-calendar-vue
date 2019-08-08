@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade" @after-enter="openModal">
+    <transition name="fade">
         <div class="modal" @click="hideModal">
             <transition name="scale">
                 <div :style="{ width: contentWidth }" @click.stop v-show="viewContent" class="relative">
@@ -29,10 +29,12 @@ export default {
             viewContent: false
         }
     },
-    methods: {
-        openModal() {
+    mounted() {
+        setTimeout(() => {
             this.viewContent = true;
-        },
+        }, 150);
+    },
+    methods: {
         hideModal() {
             this.viewContent = false;
             this.$emit('hideModal');
@@ -55,6 +57,12 @@ export default {
         overflow: auto;
         background-color: rgba(0, 0, 0, .85);
         transition: all .4s ease-in-out;
+    }
+    .modal__content {
+        background-color: white;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
     }
     .close__icon {
         position: absolute;

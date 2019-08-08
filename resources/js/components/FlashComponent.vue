@@ -52,6 +52,7 @@
         position: fixed;
         right: 2.5rem;
         top: 6rem;
+        z-index: 100;
     }
     .alert-danger {
         color: white;

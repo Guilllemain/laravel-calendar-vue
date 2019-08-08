@@ -1,29 +1,7 @@
 <template>
-    <div @click="addBackground" class="flex flex-col items-center">
-        <modal-component v-show="showModal" @hideModal="closeModal" name="add-event">
-            <div class="modal__content">
-                <template v-if="isEditing">
-                    <h3 class="font-bold">{{ user.fullname }}</h3>
-                    <div class="text-gray-600 mt-2">Place {{ selectedEvent.parking_number }} réservé le {{ formatDate(selectedEvent.date) }}.</div>
-                    <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
-                </template>
-                <template v-if="isAdding">
-                    <label class="block text-gray-600 mb-2 pr-4" for="parking-name">Sélectionner votre place de parking</label>
-                    <form @submit.prevent="addEvent" method="POST">
-                        <div class="relative">
-                            <select name="parking-name" v-model="parking_number" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="parking_number">
-                                <option disabled selected>Veuillez choisir une place</option>
-                                <option v-for="parking in parkingsAvailable" :value="parking.number">Place {{ parking.number }}</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn mt-8">Valider</button>
-                    </form>
-                </template>
-            </div>
-        </modal-component>
+    <div class="flex flex-col items-center">
+        <view-reservation v-if="isViewing" :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
+        <add-reservation v-if="isAdding" :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
         <FullCalendar
             class="demo-app-calendar"
             ref="fullCalendar"
@@ -36,7 +14,7 @@
             :firstDay=1
             :plugins="calendarPlugins"
             :weekends="calendarWeekends"
-            :events="calendarEvents"
+            :events="reservations"
             @dateClick="handleDateClick"
             @eventClick="handleEventClick"
         />
@@ -55,6 +33,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import moment from 'moment'
 
+import ViewReservation from './ViewReservation'
+import AddReservation from './AddReservation'
+
 moment.locale('fr')
 
 export default {
@@ -65,32 +46,32 @@ export default {
         }
     },
     components: {
-        FullCalendar
+        FullCalendar,
+        ViewReservation,
+        AddReservation
     },
-    data: function() {
+    data() {
         return {
             parkings: [
                 {number: 1, color: '#dd6b20'},
                 {number: 2, color: '#319795'}
             ],
-            parkingsAvailable: '',
-            showModal: false,
-            isEditing: false,
+            parkingsAvailable: [],
+            isViewing: false,
             isAdding: false,
-            selectedEvent: '',
+            selectedReservation: '',
             date: "",
-            parking_number: 1,
             isAuthorized: true,
             calendarPlugins: [dayGridPlugin, interactionPlugin],
             calendarWeekends: true,
-            calendarEvents: []
+            reservations: []
         };
     },
     async created() {
         try {
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
-                this.pushEvent(
+                this.pushReservation(
                     reservation.id,
                     reservation.user.fullname,
                     reservation.date,
@@ -102,11 +83,9 @@ export default {
         } catch (error) {
             console.error(error)
         }
-
-        this.parkingsAvailable = this.parkings
     },
     watch: {
-        async calendarEvents(val) {
+        async reservations(val) {
             setTimeout(() => {
                 this.addBackground()
             }, 100)
@@ -123,44 +102,19 @@ export default {
     },
     methods: {
         handleDateClick(arg) {
-            // if (!this.isRequestValid(arg)) return
-            // this.isParkingAvailable(arg.dateStr)
+            if (!this.isRequestValid(arg)) return
+            this.getParkingsAvailable(arg.dateStr)
             this.date = arg.date
-            this.isEditing = false
             this.isAdding = true
-            this.showModal = true
         },
         handleEventClick(arg) {
-            this.selectedEvent = ''
-            if (!this.isEventEditable(arg)) return
+            this.selectedReservation = ''
+            if (!this.canUserViewReservation(arg)) return
             this.isAdding = false
             this.getReservation(arg.event.id)
         },
-        async addEvent(event) {
-            try {
-                const { data } = await axios.post('/api/reservation', {
-                    parking_number: this.parking_number,
-                    date: moment(this.date).format('YYYY-MM-DD'),
-                    api_token: this.user.api_token
-                })
-                this.pushEvent(data, this.user.fullname, this.date, this.parking_number, this.user.id, this.user.email)
-            } catch (error) {
-                console.error(error)
-            }
-            this.showModal = false
-        },
-        async deleteEvent() {
-            if (this.user.id !== this.selectedEvent.user_id) return
-            try {
-                await axios.delete(`/api/reservation/${this.selectedEvent.id}?api_token=${this.user.api_token}`)
-            } catch (error) {
-                console.error(error)
-            }
-            this.calendarEvents = this.calendarEvents.filter(event => event.id !== this.selectedEvent.id)
-            this.closeModal()
-        },
-        pushEvent(id, title, start, parking_number, user_id, email) {
-            this.calendarEvents.push({
+        pushReservation(id, title, start, parking_number, user_id, email) {
+            this.reservations.push({
                 id,
                 title,
                 start,
@@ -174,26 +128,22 @@ export default {
         async getReservation(id) {
             try {
                 const { data } = await axios.get(`/api/reservation/${id}?api_token=${this.user.api_token}`)
-                this.selectedEvent = data
-                this.isEditing = true
-                this.showModal = true
+                this.selectedReservation = data
+                this.isViewing = true
             } catch (error) {
                 console.error(error)
             }
         },
-        isParkingAvailable(date) {
-            const dayClicked = this.calendarEvents.filter(event => event.start === date)
-            if(dayClicked.length > 0) {
+        getParkingsAvailable(date) {
+            const dayClickedReservations = this.reservations.filter(event => event.start === date)
+            if(dayClickedReservations.length > 0) {
                 return this.parkingsAvailable = this.parkings.filter(park => {
-                    const numberAvailable = dayClicked.find(day => day.parking_number !== park.number)
+                    const numberAvailable = dayClickedReservations.find(day => day.parking_number !== park.number)
                     console.log(numberAvailable, park)
                     if(numberAvailable) return park.number !== numberAvailable.parking_number
                 })
             }
             return this.parkingsAvailable = this.parkings
-        },
-        formatDate(date) {
-            return moment(date).format('dddd D MMMM')
         },
         isRequestValid(request) {
             if (request.date < moment().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger')
@@ -202,25 +152,31 @@ export default {
             if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             return true
         },
-        isEventEditable(request) {
-            const clickedEvent = this.calendarEvents.find(event => event.id === Number(request.event.id))
+        canUserViewReservation(request) {
+            const clickedEvent = this.reservations.find(event => event.id === Number(request.event.id))
             if (clickedEvent.user_id === this.user.id && request.event.start < moment().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger')
             if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger')
             return true
         },
         isDayFull(date) {
-            if (this.calendarEvents
+            if (this.reservations
                             .filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length >= 2) {
                                 return true
                             }
             return false
         },
-        closeModal() {
-            this.showModal = false
-            this.editEvent = false
+        reset() {
+            this.isViewing = false
+            this.isAdding = false
             setTimeout(() => {
                 this.addBackground()
             }, 100);
+        },
+        createReservation(event) {
+            this.pushReservation(event.id, event.username, event.date, event.parking_number, this.user.id, this.user.email)
+        },
+        updateReservations(event) {
+            this.reservations = this.reservations.filter(el => el.id !== event.reservation_id)
         },
         addBackground() {
             const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
