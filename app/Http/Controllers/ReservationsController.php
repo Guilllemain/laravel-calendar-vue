@@ -24,26 +24,6 @@ class ReservationsController extends Controller
 
     public function store(ReservationRequest $request)
     {
-        $reservations_at_requested_date = Reservation::where('date', $request->date)->get();
-        
-        // check if day is full
-        if (count($reservations_at_requested_date) === 2) {
-            return;
-        }
-
-        // check if the parking requested is not the same as the one already booked
-        if (count($reservations_at_requested_date) > 0) {
-            if ($reservations_at_requested_date[0]->parking_number === $request->parking_number) {
-                return;
-            };
-        }
-        
-        // return if there is already a reservation in the next days
-        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', now()->startOfDay())->exists();
-        if ($user_reservations) {
-            return;
-        }
-        
         // add record to the database
         $reservation = Reservation::create([
             'user_id' => auth()->id(),
@@ -55,11 +35,18 @@ class ReservationsController extends Controller
 
     public function show(Reservation $reservation)
     {
+        // check if the user can view the selected reservation
+        $this->authorize('view', $reservation);
+
         return $reservation;
     }
 
     public function destroy(Reservation $reservation)
     {
+        // check if the user can delete the selected reservation
+        $this->authorize('delete', $reservation);
+
+        // delete the reservation
         $reservation->delete();
     }
 

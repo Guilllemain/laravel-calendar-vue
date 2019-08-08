@@ -14974,8 +14974,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
-      if (!this.isRequestValid(arg)) return;
-      this.isParkingAvailable(arg.dateStr);
+      // if (!this.isRequestValid(arg)) return
+      // this.isParkingAvailable(arg.dateStr)
       this.date = arg.date;
       this.isEditing = false;
       this.isAdding = true;
@@ -15116,32 +15116,23 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
               case 3:
                 _ref4 = _context5.sent;
                 data = _ref4.data;
-
-                if (!(data.user_id !== this.user.id)) {
-                  _context5.next = 7;
-                  break;
-                }
-
-                return _context5.abrupt("return");
-
-              case 7:
                 this.selectedEvent = data;
                 this.isEditing = true;
                 this.showModal = true;
-                _context5.next = 15;
+                _context5.next = 13;
                 break;
 
-              case 12:
-                _context5.prev = 12;
+              case 10:
+                _context5.prev = 10;
                 _context5.t0 = _context5["catch"](0);
                 console.error(_context5.t0);
 
-              case 15:
+              case 13:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[0, 12]]);
+        }, _callee5, this, [[0, 10]]);
       }));
 
       function getReservation(_x3) {

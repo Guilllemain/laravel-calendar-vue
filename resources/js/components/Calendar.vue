@@ -123,8 +123,8 @@ export default {
     },
     methods: {
         handleDateClick(arg) {
-            if (!this.isRequestValid(arg)) return
-            this.isParkingAvailable(arg.dateStr)
+            // if (!this.isRequestValid(arg)) return
+            // this.isParkingAvailable(arg.dateStr)
             this.date = arg.date
             this.isEditing = false
             this.isAdding = true
@@ -174,7 +174,6 @@ export default {
         async getReservation(id) {
             try {
                 const { data } = await axios.get(`/api/reservation/${id}?api_token=${this.user.api_token}`)
-                if (data.user_id !== this.user.id) return
                 this.selectedEvent = data
                 this.isEditing = true
                 this.showModal = true
