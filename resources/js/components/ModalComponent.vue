@@ -1,14 +1,16 @@
 <template>
-    <transition name="fade">
-        <div v-if="isShowing" class="modal" @click="hideModal">
-            <div :style="{ width: contentWidth }" @click.stop class="relative">
-                <span class="close__icon" @click="hideModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
-                        <use class="text-grey fill-current" href="/svg/icons.svg#close" />
-                    </svg>
-                </span>
-                <slot></slot>
-            </div>
+    <transition name="fade" @after-enter="showContent = true">
+        <div v-if="isShowing" class="modal" @click="showContent = false">
+            <transition name="scale" @after-leave="hideModal">
+                <div v-if="showContent" :style="{ width: contentWidth }" @click.stop class="modal__content">
+                    <span class="modal__close" @click="showContent = false">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-close">
+                            <use href="/svg/icons.svg#close" />
+                        </svg>
+                    </span>
+                    <slot></slot>
+                </div>
+            </transition>
         </div>
     </transition>
 </template>
@@ -27,6 +29,11 @@ export default {
             default: false
         } 
     },
+    data() {
+        return {
+            showContent: false
+        }
+    },
     methods: {
         hideModal() {
             this.$emit("hideModal");
@@ -35,7 +42,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .modal {
     position: fixed;
     display: flex;
@@ -47,20 +54,19 @@ export default {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.75);
     transition: all 0.4s ease-in-out;
 }
+
 .modal__content {
-    visibility: hidden;
-    opacity: 0;
     background-color: white;
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    animation: scaleIn 0.2s ease-in-out forwards;
+    position: relative;
 }
 
-.close__icon {
+.modal__close {
     position: absolute;
     top: 1rem;
     right: 1.2rem;
@@ -70,36 +76,39 @@ export default {
     transition: all 0.2s;
 }
 
-.close__icon:hover,
-.close__icon:focus {
+.modal__close:hover,
+.modal__close:focus {
     opacity: 1;
 }
 
-.close__icon:hover {
+.modal__close:hover {
     transform: scale(1.05);
 }
 
-.icon__svg {
+.icon-close {
     height: 1.3rem;
     width: 1.3rem;
 }
 
-.fade-enter-active {
-    transition: opacity .3s;
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
 }
-.fade-leave-active {
-    transition: opacity .3s;
-}
+
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
 }
 
 .scale-enter-active {
-    animation: scaleIn 0.2s ease-in-out forwards;
+    animation: scaleIn 0.2s ease-in-out;
+}
+.scale-leave-active {
+    animation: scaleIn 0.2s ease-in-out reverse;
 }
 @keyframes scaleIn {
     0% {
+        opacity: 0;
+        visibility: hidden;
         transform: scale(0.75);
     }
     100% {

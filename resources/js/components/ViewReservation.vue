@@ -1,11 +1,9 @@
 <template>
-    <!-- <modal-component @hideModal="closeModal"> -->
-        <div class="modal__content">
-            <h3 class="font-bold">{{ reservation.user.fullname }}</h3>
-            <div class="text-gray-600 mt-2">Place {{ reservation.parking_number }} réservé le {{ formatDate(reservation.date) }}.</div>
-            <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
-        </div>
-    <!-- </modal-component> -->
+    <div>
+        <h3 class="font-bold">{{ reservation.user.fullname }}</h3>
+        <div class="text-gray-600 mt-2">Place {{ reservation.parking_number }} réservé le {{ formatDate(reservation.date) }}.</div>
+        <button class="btn mt-8" @click="deleteEvent">Supprimer cette réservation</button>
+    </div>
 </template>
 
 <script>
