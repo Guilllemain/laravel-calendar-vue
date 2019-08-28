@@ -1,16 +1,14 @@
 <template>
     <transition name="fade">
-        <div class="modal" @click="hideModal">
-            <transition name="scale">
-                <div :style="{ width: contentWidth }" @click.stop v-show="viewContent" class="relative">
-                    <span class="close__icon" @click="hideModal">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
-                            <use class="text-grey fill-current" href="/svg/icons.svg#close"></use>
-                        </svg>
-                    </span>
-                    <slot></slot>
-                </div>
-            </transition>
+        <div v-if="isShowing" class="modal" @click="hideModal">
+            <div :style="{ width: contentWidth }" @click.stop class="relative">
+                <span class="close__icon" @click="hideModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon__svg">
+                        <use class="text-grey fill-current" href="/svg/icons.svg#close" />
+                    </svg>
+                </span>
+                <slot></slot>
+            </div>
         </div>
     </transition>
 </template>
@@ -21,92 +19,94 @@ export default {
         contentWidth: {
             required: false,
             type: String,
-            default: '30rem'
-        }
-    },
-    data() {
-        return {
-            viewContent: false
-        }
-    },
-    mounted() {
-        setTimeout(() => {
-            this.viewContent = true;
-        }, 150);
+            default: "30rem"
+        },
+        isShowing: {
+            required: true,
+            type: Boolean,
+            default: false
+        } 
     },
     methods: {
         hideModal() {
-            this.viewContent = false;
-            this.$emit('hideModal');
-        },
-    },
-}
+            this.$emit("hideModal");
+        }
+    }
+};
 </script>
 
-<style scoped>
-    .modal {
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, .85);
-        transition: all .4s ease-in-out;
-    }
-    .modal__content {
-        background-color: white;
-        padding: 3rem;
-        display: flex;
-        flex-direction: column;
-    }
-    .close__icon {
-        position: absolute;
-        top: 1rem;
-        right: 1.2rem;
-        opacity: .8;
-        cursor: pointer;
-        z-index: 20;
-        transition: all .2s;
-    }
+<style>
+.modal {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.85);
+    transition: all 0.4s ease-in-out;
+}
+.modal__content {
+    visibility: hidden;
+    opacity: 0;
+    background-color: white;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn 0.2s ease-in-out forwards;
+}
 
-    .close__icon:hover,
-    .close__icon:focus {
+.close__icon {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    opacity: 0.8;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.2s;
+}
+
+.close__icon:hover,
+.close__icon:focus {
+    opacity: 1;
+}
+
+.close__icon:hover {
+    transform: scale(1.05);
+}
+
+.icon__svg {
+    height: 1.3rem;
+    width: 1.3rem;
+}
+
+.fade-enter-active {
+    transition: opacity .3s;
+}
+.fade-leave-active {
+    transition: opacity .3s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.scale-enter-active {
+    animation: scaleIn 0.2s ease-in-out forwards;
+}
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.75);
+    }
+    100% {
         opacity: 1;
+        visibility: visible;
+        transform: scale(1);
     }
-
-    .close__icon:hover {
-        transform: scale(1.05);
-    }
-
-    .icon__svg {
-        height: 1.3rem;
-        width: 1.3rem;
-    }
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .2s;
-    }
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
-    .scale-enter-active {
-        animation: scaleIn .2s ease-in-out forwards;
-    }
-    .scale-leave-active {
-        animation: scaleOut .2s ease-in-out forwards;
-    }
-    @keyframes scaleIn {
-        0% {opacity: 0; transform: scale(.75);}
-        100% {opacity: 1;transform: scale(1);}
-    }
-    @keyframes scaleOut {
-        0% {opacity: 1;transform: scale(1);}
-        100% {opacity: 0; transform: scale(.75);}
-    }
+}
 </style>
 

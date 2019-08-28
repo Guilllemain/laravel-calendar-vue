@@ -1,7 +1,11 @@
 <template>
     <div class="flex flex-col items-center">
-        <view-reservation v-if="isViewing" :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
-        <add-reservation v-if="isAdding" :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
+        <modal-component @hideModal="reset" :isShowing="isViewing">
+            <view-reservation :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
+        </modal-component>
+        <modal-component @hideModal="reset" :isShowing="isAdding">
+            <add-reservation :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
+        </modal-component>
         <FullCalendar
             class="demo-app-calendar"
             ref="fullCalendar"
@@ -190,12 +194,5 @@ export default {
 .demo-app-calendar {
     margin: 0 3%;
     max-width: 900px;
-}
-
-.modal__content {
-    background-color: white;
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
 }
 </style>

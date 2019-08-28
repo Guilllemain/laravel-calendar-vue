@@ -1,5 +1,4 @@
 <template>
-        <modal-component @hideModal="closeModal">
             <div class="modal__content">
                     <form @submit.prevent="createReservation" method="POST">
                         <div class="relative">
@@ -14,7 +13,6 @@
                         <button type="submit" class="btn mt-8">Réserver</button>
                     </form>
             </div>
-        </modal-component>
 </template>
 
 <script>
