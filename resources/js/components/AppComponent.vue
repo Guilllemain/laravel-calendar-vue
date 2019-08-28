@@ -1,10 +1,8 @@
 <template>
     <div class="flex flex-col items-center">
-        <modal-component @hideModal="reset" :isShowing="isViewing">
-            <view-reservation :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
-        </modal-component>
-        <modal-component @hideModal="reset" :isShowing="isAdding">
-            <add-reservation :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
+        <modal-component @hideModal="reset" :isShowing="isViewing || isAdding">
+            <view-reservation v-if="isViewing" :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
+            <add-reservation v-else :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
         </modal-component>
         <FullCalendar
             class="demo-app-calendar"

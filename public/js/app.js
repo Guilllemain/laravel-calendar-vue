@@ -14961,8 +14961,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 
 
 
@@ -15489,7 +15487,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".modal[data-v-4b2d100a] {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 10;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgba(0, 0, 0, 0.75);\n  transition: all 0.4s ease-in-out;\n}\n.modal__content[data-v-4b2d100a] {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n  position: relative;\n}\n.modal__close[data-v-4b2d100a] {\n  position: absolute;\n  top: 1rem;\n  right: 1.2rem;\n  opacity: 0.8;\n  cursor: pointer;\n  z-index: 20;\n  transition: all 0.2s;\n}\n.modal__close[data-v-4b2d100a]:hover,\n.modal__close[data-v-4b2d100a]:focus {\n  opacity: 1;\n}\n.modal__close[data-v-4b2d100a]:hover {\n  transform: scale(1.05);\n}\n.icon-close[data-v-4b2d100a] {\n  height: 1.3rem;\n  width: 1.3rem;\n}\n.fade-enter-active[data-v-4b2d100a], .fade-leave-active[data-v-4b2d100a] {\n  transition: opacity .2s;\n}\n.fade-enter[data-v-4b2d100a],\n.fade-leave-to[data-v-4b2d100a] {\n  opacity: 0;\n}\n.scale-enter-active[data-v-4b2d100a] {\n  -webkit-animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out;\n          animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out;\n}\n.scale-leave-active[data-v-4b2d100a] {\n  animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out reverse;\n}\n@-webkit-keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0;\n    visibility: hidden;\n    transform: scale(0.75);\n}\n100% {\n    opacity: 1;\n    visibility: visible;\n    transform: scale(1);\n}\n}\n@keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0;\n    visibility: hidden;\n    transform: scale(0.75);\n}\n100% {\n    opacity: 1;\n    visibility: visible;\n    transform: scale(1);\n}\n}\n", ""]);
+exports.push([module.i, ".modal[data-v-4b2d100a] {\n  position: fixed;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 10;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgba(0, 0, 0, 0.75);\n  transition: all 0.4s ease-in-out;\n}\n.modal__content[data-v-4b2d100a] {\n  background-color: white;\n  padding: 3rem;\n  display: flex;\n  flex-direction: column;\n  position: relative;\n  border-radius: 3px;\n}\n.modal__close[data-v-4b2d100a] {\n  position: absolute;\n  top: 1rem;\n  right: 1.2rem;\n  opacity: 0.8;\n  cursor: pointer;\n  z-index: 20;\n  transition: all 0.2s;\n}\n.modal__close[data-v-4b2d100a]:hover,\n.modal__close[data-v-4b2d100a]:focus {\n  opacity: 1;\n}\n.modal__close[data-v-4b2d100a]:hover {\n  transform: scale(1.05);\n}\n.icon-close[data-v-4b2d100a] {\n  height: 1.3rem;\n  width: 1.3rem;\n}\n.fade-enter-active[data-v-4b2d100a], .fade-leave-active[data-v-4b2d100a] {\n  transition: opacity .2s;\n}\n.fade-enter[data-v-4b2d100a],\n.fade-leave-to[data-v-4b2d100a] {\n  opacity: 0;\n}\n.scale-enter-active[data-v-4b2d100a] {\n  -webkit-animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out;\n          animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out;\n}\n.scale-leave-active[data-v-4b2d100a] {\n  animation: scaleIn-data-v-4b2d100a 0.2s ease-in-out reverse;\n}\n@-webkit-keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0;\n    visibility: hidden;\n    transform: scale(0.75);\n}\n100% {\n    opacity: 1;\n    visibility: visible;\n    transform: scale(1);\n}\n}\n@keyframes scaleIn-data-v-4b2d100a {\n0% {\n    opacity: 0;\n    visibility: hidden;\n    transform: scale(0.75);\n}\n100% {\n    opacity: 1;\n    visibility: visible;\n    transform: scale(1);\n}\n}\n", ""]);
 
 // exports
 
@@ -35221,34 +35219,30 @@ var render = function() {
     [
       _c(
         "modal-component",
-        { attrs: { isShowing: _vm.isViewing }, on: { hideModal: _vm.reset } },
+        {
+          attrs: { isShowing: _vm.isViewing || _vm.isAdding },
+          on: { hideModal: _vm.reset }
+        },
         [
-          _c("view-reservation", {
-            attrs: { reservation: _vm.selectedReservation },
-            on: {
-              closeModal: _vm.reset,
-              updateReservations: _vm.updateReservations
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "modal-component",
-        { attrs: { isShowing: _vm.isAdding }, on: { hideModal: _vm.reset } },
-        [
-          _c("add-reservation", {
-            attrs: {
-              user: _vm.user,
-              date: _vm.date,
-              parkings: _vm.parkingsAvailable
-            },
-            on: {
-              createReservation: _vm.createReservation,
-              closeModal: _vm.reset
-            }
-          })
+          _vm.isViewing
+            ? _c("view-reservation", {
+                attrs: { reservation: _vm.selectedReservation },
+                on: {
+                  closeModal: _vm.reset,
+                  updateReservations: _vm.updateReservations
+                }
+              })
+            : _c("add-reservation", {
+                attrs: {
+                  user: _vm.user,
+                  date: _vm.date,
+                  parkings: _vm.parkingsAvailable
+                },
+                on: {
+                  createReservation: _vm.createReservation,
+                  closeModal: _vm.reset
+                }
+              })
         ],
         1
       ),

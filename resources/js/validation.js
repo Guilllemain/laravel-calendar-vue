@@ -1,5 +1,7 @@
 const form = document.login
 
+form.btn.setAttribute('disabled', true)
+
 form.email.addEventListener('keyup', function () {
     checkError(!this.value.includes('@fft.fr'), this, '.email-error')
 })

@@ -64,6 +64,7 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
+    border-radius: 3px;
 }
 
 .modal__close {

@@ -107,7 +107,6 @@
 
         <div class="">
                 <button
-                    disabled
                     name="btn"
                     class="btn"
                     type="submit">

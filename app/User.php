@@ -50,7 +50,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFullnameAttribute()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        $fullname = strtolower($this->firstname . ' ' . $this->lastname);
+
+        if (strpos($fullname, '-') !== false) {
+            $fullname = str_replace('-', ' ', $fullname);
+        }
+        return ucwords($fullname);
     }
 
     //overwrite the sendEmailVerificationNotification method
