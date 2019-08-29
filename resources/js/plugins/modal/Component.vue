@@ -38,11 +38,11 @@ export default {
         }
     },
     beforeMount() {
-        Modal.EventBus.$on('show', (name) => {
+        Modal.EventBus.$on('show', name => {
             if(name !== this.name) return
             this.show()
         })
-        Modal.EventBus.$on('hide', (name) => {
+        Modal.EventBus.$on('hide', name => {
             if(name !== this.name) return
             this.hide()
         })

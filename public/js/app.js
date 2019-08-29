@@ -14984,7 +14984,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
     return {
       parkings: [{
         number: 1,
-        color: '#dd6b20'
+        color: '#c67bff'
       }, {
         number: 2,
         color: '#319795'
@@ -15214,7 +15214,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         });
 
         unavailableTiles.forEach(function (tile) {
-          return tile.style.background = '#f7fafc';
+          return tile.style.background = '#e5e5e5';
         });
       }, 100);
     }
@@ -48103,13 +48103,13 @@ var Plugin = {
   install: function install(Vue) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     Vue.component(options.name || 'modal', _Component_vue__WEBPACK_IMPORTED_MODULE_0__["default"]);
-    this.EventBus = new Vue();
+    Plugin.EventBus = new Vue();
     Vue.prototype.$modal = {
-      show: function show(params) {
-        Plugin.EventBus.$emit('show', params);
+      show: function show(name) {
+        Plugin.EventBus.$emit('show', name);
       },
-      hide: function hide(params) {
-        Plugin.EventBus.$emit('hide', params);
+      hide: function hide(name) {
+        Plugin.EventBus.$emit('hide', name);
       }
     };
   }

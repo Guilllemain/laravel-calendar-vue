@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             parkings: [
-                {number: 1, color: '#dd6b20'},
+                {number: 1, color: '#c67bff'},
                 {number: 2, color: '#319795'}
             ],
             parkingsAvailable: [],
@@ -172,7 +172,7 @@ export default {
         addBackground() {
             setTimeout(() => {
                 const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
-                unavailableTiles.forEach(tile => tile.style.background = '#f7fafc')
+                unavailableTiles.forEach(tile => tile.style.background = '#e5e5e5')
             }, 100);
         }
     }

@@ -4,14 +4,14 @@ const Plugin = {
     install: function(Vue, options = {}) {
         Vue.component(options.name || 'modal', Component)
         
-        this.EventBus = new Vue()
+        Plugin.EventBus = new Vue()
 
         Vue.prototype.$modal = {
-            show(params) {
-                Plugin.EventBus.$emit('show', params)
+            show(name) {
+                Plugin.EventBus.$emit('show', name)
             },
-            hide(params) {
-                Plugin.EventBus.$emit('hide', params)
+            hide(name) {
+                Plugin.EventBus.$emit('hide', name)
             }
         }
     }
