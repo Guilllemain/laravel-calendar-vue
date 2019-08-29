@@ -12,6 +12,7 @@
                 <option disabled selected value>--- Veuillez choisir une place ---</option>
                 <option
                     v-for="parking in parkings"
+                    :key="parking.parking_number"
                     :value="parking.number"
                 >Place {{ parking.number }}</option>
             </select>
@@ -60,8 +61,9 @@ export default {
     },
     methods: {
         async createReservation(event) {
-            if (!this.parking_number)
-                return flash("Vous devez sélectionner un parking", "danger");
+            if (!this.parking_number) {
+                return flash("Vous devez sélectionner un parking", "danger")
+            }
             try {
                 const { data } = await axios.post("/api/reservation", {
                     parking_number: this.parking_number,
@@ -77,10 +79,7 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-            this.closeModal();
-        },
-        closeModal() {
-            this.$emit("closeModal");
+            this.$modal.hide('add');
         }
     }
 };

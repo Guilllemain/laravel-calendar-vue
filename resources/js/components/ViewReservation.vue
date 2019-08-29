@@ -30,13 +30,10 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-            this.closeModal();
+            this.$modal.hide('view')
         },
         formatDate(date) {
             return moment(date).format("dddd D MMMM");
-        },
-        closeModal() {
-            this.$emit("closeModal");
         }
     }
 };

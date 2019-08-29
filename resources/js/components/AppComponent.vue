@@ -1,9 +1,11 @@
 <template>
-    <div class="flex flex-col items-center">
-        <modal-component @hideModal="reset" :isShowing="isViewing || isAdding">
-            <view-reservation v-if="isViewing" :reservation="selectedReservation" @closeModal="reset" @updateReservations="updateReservations"></view-reservation>
-            <add-reservation v-else :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation" @closeModal="reset"></add-reservation>
-        </modal-component>
+    <div class="flex flex-col items-center" @click="addBackground">
+        <modal name="add">
+            <add-reservation :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation"></add-reservation>
+        </modal>
+        <modal name="view">
+            <view-reservation :reservation="selectedReservation" @updateReservations="updateReservations"></view-reservation>
+        </modal>
         <FullCalendar
             class="demo-app-calendar"
             ref="fullCalendar"
@@ -21,7 +23,7 @@
             @eventClick="handleEventClick"
         />
         <div class="flex justify-center m-4">
-            <div class="flex items-center mr-8" v-for="parking in parkings">
+            <div class="flex items-center mr-8" v-for="parking in parkings" :key="parking.number">
                 <span class="h-4 w-8 block mr-2" :style="{ backgroundColor: parking.color}"></span>
                 Place {{parking.number}}
             </div>
@@ -59,8 +61,6 @@ export default {
                 {number: 2, color: '#319795'}
             ],
             parkingsAvailable: [],
-            isViewing: false,
-            isAdding: false,
             selectedReservation: '',
             date: "",
             isAuthorized: true,
@@ -88,9 +88,7 @@ export default {
     },
     watch: {
         async reservations(val) {
-            setTimeout(() => {
-                this.addBackground()
-            }, 100)
+            this.addBackground()
             try {
                 const { data } = await axios.get(`/api/reservation/is-authorized/${this.user.id}?api_token=${this.user.api_token}`)
                 if (!data) {
@@ -107,12 +105,11 @@ export default {
             if (!this.isRequestValid(arg)) return
             this.getParkingsAvailable(arg.dateStr)
             this.date = arg.date
-            this.isAdding = true
+            this.$modal.show('add')
         },
         handleEventClick(arg) {
             this.selectedReservation = ''
             if (!this.canUserViewReservation(arg)) return
-            this.isAdding = false
             this.getReservation(arg.event.id)
         },
         pushReservation(id, title, start, parking_number, user_id, email) {
@@ -131,7 +128,7 @@ export default {
             try {
                 const { data } = await axios.get(`/api/reservation/${id}?api_token=${this.user.api_token}`)
                 this.selectedReservation = data
-                this.isViewing = true
+                this.$modal.show('view')
             } catch (error) {
                 console.error(error)
             }
@@ -141,7 +138,6 @@ export default {
             if(dayClickedReservations.length > 0) {
                 return this.parkingsAvailable = this.parkings.filter(park => {
                     const numberAvailable = dayClickedReservations.find(day => day.parking_number !== park.number)
-                    console.log(numberAvailable, park)
                     if(numberAvailable) return park.number !== numberAvailable.parking_number
                 })
             }
@@ -167,13 +163,6 @@ export default {
                             }
             return false
         },
-        reset() {
-            this.isViewing = false
-            this.isAdding = false
-            setTimeout(() => {
-                this.addBackground()
-            }, 100);
-        },
         createReservation(event) {
             this.pushReservation(event.id, event.username, event.date, event.parking_number, this.user.id, this.user.email)
         },
@@ -181,8 +170,10 @@ export default {
             this.reservations = this.reservations.filter(el => el.id !== event.reservation_id)
         },
         addBackground() {
-            const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
-            unavailableTiles.forEach(tile => tile.style.background = '#f7fafc')
+            setTimeout(() => {
+                const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
+                unavailableTiles.forEach(tile => tile.style.background = '#f7fafc')
+            }, 100);
         }
     }
 }

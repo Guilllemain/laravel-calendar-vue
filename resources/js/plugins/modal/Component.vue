@@ -1,42 +1,58 @@
 <template>
-    <transition name="fade" @after-enter="showContent = true">
-        <div v-if="isShowing" class="modal" @click="showContent = false">
-            <transition name="scale" @after-leave="hideModal">
-                <div v-if="showContent" :style="{ width: contentWidth }" @click.stop class="modal__content">
-                    <span class="modal__close" @click="showContent = false">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-close">
-                            <use href="/svg/icons.svg#close" />
-                        </svg>
-                    </span>
-                    <slot></slot>
-                </div>
-            </transition>
-        </div>
-    </transition>
+        <transition name="fade" @after-enter="showContent = true">
+            <div v-if="isVisible" class="modal" @click="showContent = false">
+                <transition name="scale" @after-leave="hide">
+                    <div v-if="showContent" :style="{ width: contentWidth }" @click.stop class="modal__content">
+                        <span class="modal__close" @click="showContent = false">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-close">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                <path d="M0 0h24v24H0z" fill="none"/>
+                            </svg>
+                        </span>
+                        <slot></slot>
+                    </div>
+                </transition>
+            </div>
+        </transition>
 </template>
 
 <script>
+import Modal from './ModalPlugin';
+
 export default {
     props: {
+        name: {
+          required: true,
+          type: String
+        },
         contentWidth: {
             required: false,
             type: String,
             default: "30rem"
-        },
-        isShowing: {
-            required: true,
-            type: Boolean,
-            default: false
-        } 
+        }
     },
     data() {
         return {
+            isVisible: false,
             showContent: false
         }
     },
+    beforeMount() {
+        Modal.EventBus.$on('show', (name) => {
+            if(name !== this.name) return
+            this.show()
+        })
+        Modal.EventBus.$on('hide', (name) => {
+            if(name !== this.name) return
+            this.hide()
+        })
+    },
     methods: {
-        hideModal() {
-            this.$emit("hideModal");
+        hide() {
+            this.isVisible = false
+        },
+        show() {
+            this.isVisible = true
         }
     }
 };
@@ -103,6 +119,7 @@ export default {
 .scale-enter-active {
     animation: scaleIn 0.2s ease-in-out;
 }
+
 .scale-leave-active {
     animation: scaleIn 0.2s ease-in-out reverse;
 }
