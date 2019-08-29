@@ -172,7 +172,7 @@ export default {
         addBackground() {
             setTimeout(() => {
                 const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
-                unavailableTiles.forEach(tile => tile.style.background = '#e5e5e5')
+                unavailableTiles.forEach(tile => tile.style.background = '#ededed')
             }, 100);
         }
     }

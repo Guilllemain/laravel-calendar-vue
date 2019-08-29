@@ -15214,7 +15214,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         });
 
         unavailableTiles.forEach(function (tile) {
-          return tile.style.background = '#e5e5e5';
+          return tile.style.background = '#ededed';
         });
       }, 100);
     }
