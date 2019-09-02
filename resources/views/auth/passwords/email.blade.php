@@ -25,7 +25,6 @@
                 </span>
                 @enderror
             </div>
-
         </div>
 
         <button

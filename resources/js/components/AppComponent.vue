@@ -35,7 +35,6 @@
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import Modal from '../plugins/modal/ModalPlugin'
 import moment from 'moment'
 
 import ViewReservation from './ViewReservation'

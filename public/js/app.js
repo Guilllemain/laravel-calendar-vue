@@ -14910,11 +14910,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _plugins_modal_ModalPlugin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../plugins/modal/ModalPlugin */ "./resources/js/plugins/modal/ModalPlugin.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _ViewReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ViewReservation */ "./resources/js/components/ViewReservation.vue");
-/* harmony import */ var _AddReservation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddReservation */ "./resources/js/components/AddReservation.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _ViewReservation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ViewReservation */ "./resources/js/components/ViewReservation.vue");
+/* harmony import */ var _AddReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddReservation */ "./resources/js/components/AddReservation.vue");
 
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -14968,8 +14967,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-
-moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
+moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     user: {
@@ -14979,8 +14977,8 @@ moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
   },
   components: {
     FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ViewReservation: _ViewReservation__WEBPACK_IMPORTED_MODULE_6__["default"],
-    AddReservation: _AddReservation__WEBPACK_IMPORTED_MODULE_7__["default"]
+    ViewReservation: _ViewReservation__WEBPACK_IMPORTED_MODULE_5__["default"],
+    AddReservation: _AddReservation__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   data: function data() {
     return {
@@ -15178,8 +15176,8 @@ moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
       return this.parkingsAvailable = this.parkings;
     },
     isRequestValid: function isRequestValid(request) {
-      if (request.date < moment__WEBPACK_IMPORTED_MODULE_5___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
-      if (moment__WEBPACK_IMPORTED_MODULE_5___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_5___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
+      if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger');
       if (this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       return true;
@@ -15188,13 +15186,13 @@ moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
       var clickedEvent = this.reservations.find(function (event) {
         return event.id === Number(request.event.id);
       });
-      if (clickedEvent.user_id === this.user.id && request.event.start < moment__WEBPACK_IMPORTED_MODULE_5___default()().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger');
+      if (clickedEvent.user_id === this.user.id && request.event.start < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger');
       if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger');
       return true;
     },
     isDayFull: function isDayFull(date) {
       if (this.reservations.filter(function (event) {
-        return moment__WEBPACK_IMPORTED_MODULE_5___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_5___default()(date).format('YYYY-MM-DD');
+        return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
       }).length >= 2) {
         return true;
       }
@@ -15212,7 +15210,7 @@ moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
     addBackground: function addBackground() {
       setTimeout(function () {
         var unavailableTiles = _toConsumableArray(document.querySelectorAll('td .fc-day')).filter(function (node) {
-          return node.dataset.date > moment__WEBPACK_IMPORTED_MODULE_5___default()().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment__WEBPACK_IMPORTED_MODULE_5___default()().format('YYYY-MM-DD');
+          return node.dataset.date > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYY-MM-DD');
         });
 
         unavailableTiles.forEach(function (tile) {
