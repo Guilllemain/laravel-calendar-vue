@@ -50,6 +50,7 @@ export default {
     methods: {
         hide() {
             this.isVisible = false
+            this.$emit('updateBackground')
         },
         show() {
             this.isVisible = true

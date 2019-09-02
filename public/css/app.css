@@ -640,7 +640,7 @@ video {
   letter-spacing: 0.05em;
   background-color: #9f7aea;
   line-height: 1.1;
-  transition: all .2s ease-in-out;
+  transition: color .2s ease-in-out, background-color .2s ease-in-out, transform .2s ease-in-out;
 }
 
 .btn:hover{

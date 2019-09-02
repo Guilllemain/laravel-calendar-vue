@@ -17,7 +17,7 @@ module.exports = {
                     letterSpacing: '0.05em',
                     backgroundColor: '#9f7aea',
                     lineHeight: '1.1',
-                    transition: 'all .2s ease-in-out',
+                    transition: 'color .2s ease-in-out, background-color .2s ease-in-out, transform .2s ease-in-out',
                     '&:hover': {
                         color: '#fff',
                         backgroundColor: '#b794f4'

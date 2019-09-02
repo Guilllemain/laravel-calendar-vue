@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-col items-center" @click="addBackground">
-        <modal name="add">
+    <div class="flex flex-col items-center">
+        <modal name="add" @updateBackground="addBackground">
             <add-reservation :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation"></add-reservation>
         </modal>
-        <modal name="view">
+        <modal name="view" @updateBackground="addBackground">
             <view-reservation :reservation="selectedReservation" @updateReservations="updateReservations"></view-reservation>
         </modal>
         <FullCalendar
@@ -35,6 +35,7 @@
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Modal from '../plugins/modal/ModalPlugin'
 import moment from 'moment'
 
 import ViewReservation from './ViewReservation'
@@ -71,7 +72,6 @@ export default {
     },
     async created() {
         try {
-            this.addBackground()
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
                 this.pushReservation(

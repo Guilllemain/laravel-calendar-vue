@@ -14910,10 +14910,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _ViewReservation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ViewReservation */ "./resources/js/components/ViewReservation.vue");
-/* harmony import */ var _AddReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AddReservation */ "./resources/js/components/AddReservation.vue");
+/* harmony import */ var _plugins_modal_ModalPlugin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../plugins/modal/ModalPlugin */ "./resources/js/plugins/modal/ModalPlugin.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _ViewReservation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ViewReservation */ "./resources/js/components/ViewReservation.vue");
+/* harmony import */ var _AddReservation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AddReservation */ "./resources/js/components/AddReservation.vue");
 
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -14967,7 +14968,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
+
+moment__WEBPACK_IMPORTED_MODULE_5___default.a.locale('fr');
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     user: {
@@ -14977,8 +14979,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   components: {
     FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ViewReservation: _ViewReservation__WEBPACK_IMPORTED_MODULE_5__["default"],
-    AddReservation: _AddReservation__WEBPACK_IMPORTED_MODULE_6__["default"]
+    ViewReservation: _ViewReservation__WEBPACK_IMPORTED_MODULE_6__["default"],
+    AddReservation: _AddReservation__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   data: function data() {
     return {
@@ -15011,30 +15013,29 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              this.addBackground();
-              _context.next = 4;
+              _context.next = 3;
               return axios.get("/api/reservations?api_token=".concat(this.user.api_token));
 
-            case 4:
+            case 3:
               _ref = _context.sent;
               data = _ref.data;
               data.forEach(function (reservation) {
                 _this.pushReservation(reservation.id, reservation.user.fullname, reservation.date, reservation.parking_number, reservation.user_id, reservation.user.email);
               });
-              _context.next = 12;
+              _context.next = 11;
               break;
 
-            case 9:
-              _context.prev = 9;
+            case 8:
+              _context.prev = 8;
               _context.t0 = _context["catch"](0);
               console.error(_context.t0);
 
-            case 12:
+            case 11:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 9]]);
+      }, _callee, this, [[0, 8]]);
     }));
 
     function created() {
@@ -15177,8 +15178,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       return this.parkingsAvailable = this.parkings;
     },
     isRequestValid: function isRequestValid(request) {
-      if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
-      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
+      if (request.date < moment__WEBPACK_IMPORTED_MODULE_5___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
+      if (moment__WEBPACK_IMPORTED_MODULE_5___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_5___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger');
       if (this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       return true;
@@ -15187,13 +15188,13 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       var clickedEvent = this.reservations.find(function (event) {
         return event.id === Number(request.event.id);
       });
-      if (clickedEvent.user_id === this.user.id && request.event.start < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger');
+      if (clickedEvent.user_id === this.user.id && request.event.start < moment__WEBPACK_IMPORTED_MODULE_5___default()().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger');
       if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger');
       return true;
     },
     isDayFull: function isDayFull(date) {
       if (this.reservations.filter(function (event) {
-        return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
+        return moment__WEBPACK_IMPORTED_MODULE_5___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_5___default()(date).format('YYYY-MM-DD');
       }).length >= 2) {
         return true;
       }
@@ -15211,7 +15212,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
     addBackground: function addBackground() {
       setTimeout(function () {
         var unavailableTiles = _toConsumableArray(document.querySelectorAll('td .fc-day')).filter(function (node) {
-          return node.dataset.date > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYY-MM-DD');
+          return node.dataset.date > moment__WEBPACK_IMPORTED_MODULE_5___default()().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment__WEBPACK_IMPORTED_MODULE_5___default()().format('YYYY-MM-DD');
         });
 
         unavailableTiles.forEach(function (tile) {
@@ -15431,6 +15432,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     hide: function hide() {
       this.isVisible = false;
+      this.$emit('updateBackground');
     },
     show: function show() {
       this.isVisible = true;
@@ -35223,14 +35225,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass: "flex flex-col items-center",
-      on: { click: _vm.addBackground }
-    },
+    { staticClass: "flex flex-col items-center" },
     [
       _c(
         "modal",
-        { attrs: { name: "add" } },
+        { attrs: { name: "add" }, on: { updateBackground: _vm.addBackground } },
         [
           _c("add-reservation", {
             attrs: {
@@ -35246,7 +35245,10 @@ var render = function() {
       _vm._v(" "),
       _c(
         "modal",
-        { attrs: { name: "view" } },
+        {
+          attrs: { name: "view" },
+          on: { updateBackground: _vm.addBackground }
+        },
         [
           _c("view-reservation", {
             attrs: { reservation: _vm.selectedReservation },
