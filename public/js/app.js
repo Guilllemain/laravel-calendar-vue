@@ -15011,29 +15011,30 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              _context.next = 3;
+              this.addBackground();
+              _context.next = 4;
               return axios.get("/api/reservations?api_token=".concat(this.user.api_token));
 
-            case 3:
+            case 4:
               _ref = _context.sent;
               data = _ref.data;
               data.forEach(function (reservation) {
                 _this.pushReservation(reservation.id, reservation.user.fullname, reservation.date, reservation.parking_number, reservation.user_id, reservation.user.email);
               });
-              _context.next = 11;
+              _context.next = 12;
               break;
 
-            case 8:
-              _context.prev = 8;
+            case 9:
+              _context.prev = 9;
               _context.t0 = _context["catch"](0);
               console.error(_context.t0);
 
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 8]]);
+      }, _callee, this, [[0, 9]]);
     }));
 
     function created() {

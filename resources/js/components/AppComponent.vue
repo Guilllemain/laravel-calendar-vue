@@ -71,6 +71,7 @@ export default {
     },
     async created() {
         try {
+            this.addBackground()
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
                 this.pushReservation(

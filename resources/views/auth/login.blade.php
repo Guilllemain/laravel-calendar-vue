@@ -41,7 +41,7 @@
 
 		<div class="md:flex md:items-center mb-2">
 			<label class="block text-gray-500 font-bold" for="remember">
-				<input class="mr-2 leading-tight" type="checkbox" name="remember"
+				<input class="leading-tight" type="checkbox" name="remember"
 					{{ old('remember') ? 'checked' : '' }}>
 				<span class="text-sm">
 					Se souvenir de moi
