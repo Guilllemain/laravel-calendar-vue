@@ -70,7 +70,6 @@ export default {
     },
     async created() {
         try {
-            this.addBackground()
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
                 this.pushReservation(
@@ -87,7 +86,7 @@ export default {
         }
     },
     mounted() {
-        this.addBackground()
+        this.addBackground(300)
     },
     watch: {
         reservations() {
@@ -166,11 +165,11 @@ export default {
         updateReservations(event) {
             this.reservations = this.reservations.filter(el => el.id !== event.reservation_id)
         },
-        addBackground() {
+        addBackground(delay = 100) {
             setTimeout(() => {
                 const unavailableTiles = [...document.querySelectorAll('td .fc-day')].filter(node => node.dataset.date > moment().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment().format('YYYY-MM-DD'))
                 unavailableTiles.forEach(tile => tile.style.background = '#ededed')
-            }, 100);
+            }, delay);
         }
     }
 }
