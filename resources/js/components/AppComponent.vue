@@ -69,7 +69,6 @@ export default {
         };
     },
     async created() {
-        this.addBackground()
         try {
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
@@ -84,6 +83,11 @@ export default {
             })
         } catch (error) {
             console.error(error)
+        }
+    },
+    watch: {
+        reservations() {
+            this.addBackground()
         }
     },
     methods: {
