@@ -49,16 +49,4 @@ class ReservationsController extends Controller
         // delete the reservation
         $reservation->delete();
     }
-
-    public function isAUthorized(User $user)
-    {
-        $reservations = $user->reservations;
-        foreach ($reservations as $reservation) {
-            $date = Carbon::create($reservation->date);
-            if ($date->greaterThanOrEqualTo(now()->startOfDay())) {
-                return 0;
-            };
-        }
-        return 1;
-    }
 }

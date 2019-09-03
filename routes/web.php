@@ -14,4 +14,12 @@
 
 Auth::routes(['verify' => true]);
 
+
 Route::get('/', 'HomeController@index')->name('home')->middleware('verified');
+
+Route::get('/users', 'UsersController@index')->middleware('admin');
+Route::get('/user/{user}', 'UsersController@edit')->middleware('admin');
+Route::patch('/user/{user}', 'UsersController@update')->middleware('admin');
+Route::delete('/user/{user}', 'UsersController@destroy')->middleware('admin');
+
+Route::get('/admin', 'AdminController@index')->middleware('admin');

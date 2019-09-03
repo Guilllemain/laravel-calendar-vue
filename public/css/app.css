@@ -8565,7 +8565,7 @@ body {
   background-color: #6b46c1;
   display: flex;
   justify-content: space-between;
-  padding: 1% 2%;
+  padding: 0.7% 2%;
   color: white;
   margin-bottom: 2%;
 }
@@ -8573,6 +8573,7 @@ body {
 .navbar-title {
   text-transform: uppercase;
   font-weight: 300;
+  font-size: 0.92rem;
 }
 
 .navbar-right {
@@ -8585,6 +8586,20 @@ body {
 
 .navbar a {
   color: currentColor;
+}
+
+.nav-link svg {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .nav-link svg {
+    display: inline;
+  }
+
+  .nav-link span {
+    display: none;
+  }
 }
 
 @media (min-width: 640px){

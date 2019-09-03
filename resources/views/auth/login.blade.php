@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex justify-center items-center">
-	<form class="md:w-1/3 max-w-sm" method="POST" action="{{ route('login') }}">
+<div class="flex md:flex-row justify-center items-center flex-col">
+	<form class="w-3/4 sm:w-1/2 md:w-1/3 max-w-sm" method="POST" action="{{ route('login') }}">
 		@csrf
 		<div class="mb-6">
 				<label class="block text-gray-500 font-bold mb-1 md:mb-0 pr-4" for="email">
@@ -61,7 +61,7 @@
 		</div>
 	</form>
 
-	<div class="ml-24 mb-8 md:w-1/3 max-w-sm">
+	<div class="w-3/4 sm:w-1/2 md:w-1/3 md:ml-24 mb-8 mt-16 max-w-sm">
 		<div class="text-gray-500 font-bold mb-2">Pas encore de compte ?</div>
 		<a class="btn" href="{{ route('register') }}">Créer un compte</a>
 	</div>

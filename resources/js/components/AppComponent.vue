@@ -63,13 +63,13 @@ export default {
             parkingsAvailable: [],
             selectedReservation: '',
             date: "",
-            isAuthorized: true,
             calendarPlugins: [dayGridPlugin, interactionPlugin],
             calendarWeekends: true,
             reservations: []
         };
     },
     async created() {
+        this.addBackground()
         try {
             const { data } = await axios.get(`/api/reservations?api_token=${this.user.api_token}`)
             data.forEach(reservation => {
@@ -84,20 +84,6 @@ export default {
             })
         } catch (error) {
             console.error(error)
-        }
-    },
-    watch: {
-        async reservations(val) {
-            this.addBackground()
-            try {
-                const { data } = await axios.get(`/api/reservation/is-authorized/${this.user.id}?api_token=${this.user.api_token}`)
-                if (!data) {
-                    return this.isAuthorized = false
-                }
-                return this.isAuthorized = true
-            } catch (error) {
-                console.error(error)
-            }            
         }
     },
     methods: {
@@ -144,9 +130,12 @@ export default {
             return this.parkingsAvailable = this.parkings
         },
         isRequestValid(request) {
-            if (request.date < moment().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger')
+            if (request.date < moment().startOf('day')) return false
+            const firstDayofWeek = moment(request.date).startOf('week');
+            const user_reservations = this.reservations.filter(res => res.user_id === this.user.id)
+            const hasAlreadyAReservation = user_reservations.some(resa => moment(resa.start) >= firstDayofWeek)
+            if (hasAlreadyAReservation) return flash('Vous avez déjà une réservation cette semaine', 'danger')
             if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
-            if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger')
             if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             return true
         },

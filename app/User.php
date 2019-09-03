@@ -18,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'firstname', 'lastname', 'email', 'password', 'api_token'
+        'firstname', 'lastname', 'email', 'password', 'api_token', 'email_verified_at'
     ];
     
     /**
@@ -41,6 +41,10 @@ class User extends Authenticatable implements MustVerifyEmail
     
     protected $appends = ['fullname'];
 
+    public function isAdmin()
+    {
+        return $this->email === 'yguillemain@fft.fr';
+    }
 
     public function reservations()
     {

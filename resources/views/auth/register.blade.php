@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="flex justify-center">
-    <form class="md:w-1/3 max-w-sm" method="POST" name="login" action="{{ route('register') }}">
+    <form class="w-3/4 md:w-1/3 max-w-sm" method="POST" name="login" action="{{ route('register') }}">
         @csrf
         <div class="mb-6">
                 <label class="block text-gray-500 font-bold mb-1 md:mb-0 pr-4" for="firstname">

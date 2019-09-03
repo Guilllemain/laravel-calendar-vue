@@ -14992,7 +14992,6 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       parkingsAvailable: [],
       selectedReservation: '',
       date: "",
-      isAuthorized: true,
       calendarPlugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2___default.a, _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3___default.a],
       calendarWeekends: true,
       reservations: []
@@ -15010,30 +15009,31 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
+              this.addBackground();
+              _context.prev = 1;
+              _context.next = 4;
               return axios.get("/api/reservations?api_token=".concat(this.user.api_token));
 
-            case 3:
+            case 4:
               _ref = _context.sent;
               data = _ref.data;
               data.forEach(function (reservation) {
                 _this.pushReservation(reservation.id, reservation.user.fullname, reservation.date, reservation.parking_number, reservation.user_id, reservation.user.email);
               });
-              _context.next = 11;
+              _context.next = 12;
               break;
 
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](0);
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](1);
               console.error(_context.t0);
 
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[0, 8]]);
+      }, _callee, this, [[1, 9]]);
     }));
 
     function created() {
@@ -15042,56 +15042,6 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
     return created;
   }(),
-  watch: {
-    reservations: function () {
-      var _reservations = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(val) {
-        var _ref2, data;
-
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                this.addBackground();
-                _context2.prev = 1;
-                _context2.next = 4;
-                return axios.get("/api/reservation/is-authorized/".concat(this.user.id, "?api_token=").concat(this.user.api_token));
-
-              case 4:
-                _ref2 = _context2.sent;
-                data = _ref2.data;
-
-                if (data) {
-                  _context2.next = 8;
-                  break;
-                }
-
-                return _context2.abrupt("return", this.isAuthorized = false);
-
-              case 8:
-                return _context2.abrupt("return", this.isAuthorized = true);
-
-              case 11:
-                _context2.prev = 11;
-                _context2.t0 = _context2["catch"](1);
-                console.error(_context2.t0);
-
-              case 14:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this, [[1, 11]]);
-      }));
-
-      function reservations(_x) {
-        return _reservations.apply(this, arguments);
-      }
-
-      return reservations;
-    }()
-  },
   methods: {
     handleDateClick: function handleDateClick(arg) {
       if (!this.isRequestValid(arg)) return;
@@ -15121,39 +15071,39 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
     getReservation: function () {
       var _getReservation = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(id) {
-        var _ref3, data;
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(id) {
+        var _ref2, data;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
+                _context2.prev = 0;
+                _context2.next = 3;
                 return axios.get("/api/reservation/".concat(id, "?api_token=").concat(this.user.api_token));
 
               case 3:
-                _ref3 = _context3.sent;
-                data = _ref3.data;
+                _ref2 = _context2.sent;
+                data = _ref2.data;
                 this.selectedReservation = data;
                 this.$modal.show('view');
-                _context3.next = 12;
+                _context2.next = 12;
                 break;
 
               case 9:
-                _context3.prev = 9;
-                _context3.t0 = _context3["catch"](0);
-                console.error(_context3.t0);
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+                console.error(_context2.t0);
 
               case 12:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3, this, [[0, 9]]);
+        }, _callee2, this, [[0, 9]]);
       }));
 
-      function getReservation(_x2) {
+      function getReservation(_x) {
         return _getReservation.apply(this, arguments);
       }
 
@@ -15176,9 +15126,18 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       return this.parkingsAvailable = this.parkings;
     },
     isRequestValid: function isRequestValid(request) {
-      if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return flash('Vous ne pouvez pas réserver une date passée', 'danger');
+      var _this2 = this;
+
+      if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return false;
+      var firstDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('week');
+      var user_reservations = this.reservations.filter(function (res) {
+        return res.user_id === _this2.user.id;
+      });
+      var hasAlreadyAReservation = user_reservations.some(function (resa) {
+        return moment__WEBPACK_IMPORTED_MODULE_4___default()(resa.start) >= firstDayofWeek;
+      });
+      if (hasAlreadyAReservation) return flash('Vous avez déjà une réservation cette semaine', 'danger');
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
-      if (!this.isAuthorized) return flash('Vous avez déjà une réservation en cours', 'danger');
       if (this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       return true;
     },

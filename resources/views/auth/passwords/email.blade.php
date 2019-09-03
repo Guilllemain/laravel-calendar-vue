@@ -7,7 +7,7 @@
         {{ session('status') }}
     </div>
     @endif
-    <form class="md:w-1/3 max-w-sm" method="POST" action="{{ route('password.email') }}">
+    <form class="w-3/4 md:w-1/3 max-w-sm" method="POST" action="{{ route('password.email') }}">
         @csrf
         <div class="mb-6">
             <label class="block text-gray-500 font-bold mb-1 md:mb-0 pr-4" for="email">
