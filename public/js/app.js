@@ -15042,7 +15042,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
     return created;
   }(),
   mounted: function mounted() {
-    this.addBackground(800);
+    this.addBackground(700);
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
@@ -35185,7 +35185,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "flex flex-col items-center" },
+    {
+      staticClass: "flex flex-col items-center",
+      on: { click: _vm.addBackground }
+    },
     [
       _c(
         "modal",

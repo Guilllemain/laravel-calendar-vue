@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center" @click="addBackground">
         <modal name="add" @updateBackground="addBackground">
             <add-reservation :user="user" :date="date" :parkings="parkingsAvailable" @createReservation="createReservation"></add-reservation>
         </modal>
@@ -86,7 +86,7 @@ export default {
         }
     },
     mounted() {
-        this.addBackground(800)
+        this.addBackground(700)
     },
     methods: {
         handleDateClick(arg) {
