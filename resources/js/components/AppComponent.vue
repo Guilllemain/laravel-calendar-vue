@@ -64,7 +64,7 @@ export default {
             selectedReservation: '',
             date: "",
             calendarPlugins: [dayGridPlugin, interactionPlugin],
-            calendarWeekends: true,
+            calendarWeekends: false,
             reservations: []
         };
     },
@@ -86,12 +86,7 @@ export default {
         }
     },
     mounted() {
-        this.addBackground(300)
-    },
-    watch: {
-        reservations() {
-            this.addBackground()
-        }
+        this.addBackground(800)
     },
     methods: {
         handleDateClick(arg) {

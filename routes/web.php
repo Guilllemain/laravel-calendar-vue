@@ -17,9 +17,16 @@ Auth::routes(['verify' => true]);
 
 Route::get('/', 'HomeController@index')->name('home')->middleware('verified');
 
-Route::get('/users', 'UsersController@index')->middleware('admin');
-Route::get('/user/{user}', 'UsersController@edit')->middleware('admin');
-Route::patch('/user/{user}', 'UsersController@update')->middleware('admin');
-Route::delete('/user/{user}', 'UsersController@destroy')->middleware('admin');
+Route::prefix('/admin')->namespace('Admin')->middleware('admin')->group(function () {
+    Route::get('/', 'HomeController@index');
 
-Route::get('/admin', 'AdminController@index')->middleware('admin');
+    Route::get('/users', 'UsersController@index');
+    Route::get('/user/{user}', 'UsersController@edit');
+    Route::patch('/user/{user}', 'UsersController@update');
+    Route::delete('/user/{user}', 'UsersController@destroy');
+
+    Route::get('/reservations', 'ReservationsController@index');
+    Route::get('/reservation/{reservation}', 'ReservationsController@edit');
+    // Route::patch('/reservation/{reservation}', 'ReservationsController@update');
+    Route::delete('/reservation/{reservation}', 'ReservationsController@destroy');
+});

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="flex items-center justify-center">
-        <form class="w-1/5" action="/user/{{$user->id}}" method="POST">
+        <form class="w-1/5" action="/admin/user/{{$user->id}}" method="POST">
             @csrf
             @method('PATCH')
             <label class="block mt-4" for="firstname">Firstname</label>

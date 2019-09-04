@@ -21,12 +21,12 @@
                         <td class="border border-gray-600 p-2">{{ $user->email_verified_at }}</td>
                         <td class="border border-gray-600 p-2">{{ $user->created_at }}</td>
                         <td class="border border-gray-600 p-2">
-                            <form class="inline" action="/user/{{$user->id}}" method="POST">
+                            <form class="inline" action="/admin/user/{{$user->id}}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="bg-red-600 rounded px-2 py-1">Delete</button>
                             </form>
-                            <a href="/user/{{$user->id}}">Edit</a>
+                            <a href="/admin/user/{{$user->id}}">Edit</a>
                         </td>
                     </tr>
                 @endforeach

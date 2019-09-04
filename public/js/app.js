@@ -14993,7 +14993,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       selectedReservation: '',
       date: "",
       calendarPlugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_2___default.a, _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3___default.a],
-      calendarWeekends: true,
+      calendarWeekends: false,
       reservations: []
     };
   },
@@ -15009,31 +15009,30 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              this.addBackground();
-              _context.prev = 1;
-              _context.next = 4;
+              _context.prev = 0;
+              _context.next = 3;
               return axios.get("/api/reservations?api_token=".concat(this.user.api_token));
 
-            case 4:
+            case 3:
               _ref = _context.sent;
               data = _ref.data;
               data.forEach(function (reservation) {
                 _this.pushReservation(reservation.id, reservation.user.fullname, reservation.date, reservation.parking_number, reservation.user_id, reservation.user.email);
               });
-              _context.next = 12;
+              _context.next = 11;
               break;
 
-            case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](1);
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](0);
               console.error(_context.t0);
 
-            case 12:
+            case 11:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[1, 9]]);
+      }, _callee, this, [[0, 8]]);
     }));
 
     function created() {
@@ -15042,6 +15041,9 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
 
     return created;
   }(),
+  mounted: function mounted() {
+    this.addBackground(800);
+  },
   methods: {
     handleDateClick: function handleDateClick(arg) {
       if (!this.isRequestValid(arg)) return;
@@ -15167,6 +15169,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       });
     },
     addBackground: function addBackground() {
+      var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
       setTimeout(function () {
         var unavailableTiles = _toConsumableArray(document.querySelectorAll('td .fc-day')).filter(function (node) {
           return node.dataset.date > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days').format('YYYY-MM-DD') || node.dataset.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYY-MM-DD');
@@ -15175,7 +15178,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         unavailableTiles.forEach(function (tile) {
           return tile.style.background = '#ededed';
         });
-      }, 100);
+      }, delay);
     }
   }
 });
