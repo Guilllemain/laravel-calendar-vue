@@ -78,6 +78,7 @@
 
         <flash-component message="{{ session('flash') }}"></flash-component>
     </div>
+    @yield('javascript')
 </body>
 
 </html>

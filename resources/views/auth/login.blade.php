@@ -68,7 +68,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@section('javascript')
 	<script>
 		const ua = window.navigator.userAgent;
 		const msie = ua.indexOf('MSIE ');
