@@ -67,3 +67,15 @@
 	</div>
 </div>
 @endsection
+
+@section('scripts')
+	<script>
+		const ua = window.navigator.userAgent;
+		const msie = ua.indexOf('MSIE ');
+		const trident = ua.indexOf('Trident/');
+
+		if (msie > 0 || trident > 0) {
+			return alert("Ce site ne marche pas sur les anciennes versions d'Internet Explorer. Merci d'utiliser Google Chrome, Microsoft Edge ou Mozilla Firefox");
+		}
+	</script>
+@endsection
