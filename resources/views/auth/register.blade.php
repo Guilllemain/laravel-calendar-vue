@@ -110,7 +110,7 @@
                     name="btn"
                     class="btn"
                     type="submit">
-                    S'enregister
+                    S'enregistrer
                 </button>
         </div>
     </form>
