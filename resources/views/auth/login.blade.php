@@ -73,9 +73,10 @@
 		const ua = window.navigator.userAgent;
 		const msie = ua.indexOf('MSIE ');
 		const trident = ua.indexOf('Trident/');
+		const edge = ua.indexOf('Edge/');
 
-		if (msie > 0 || trident > 0) {
-			alert("Ce site ne marche pas sur les anciennes versions d'Internet Explorer. Merci d'utiliser Google Chrome, Microsoft Edge ou Mozilla Firefox");
+		if (msie > 0 || trident > 0 || edge > 0) {
+			alert("Ce site ne marche pas sur les anciennes versions de Microsoft Internet Explorer et Edge. Merci d'utiliser Google Chrome ou Mozilla Firefox");
 		}
 	</script>
 @endsection
