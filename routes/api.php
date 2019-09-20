@@ -21,4 +21,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/reservations', 'ReservationsController@index');
     Route::get('/reservation/{reservation}', 'ReservationsController@show');
     Route::delete('/reservation/{reservation}', 'ReservationsController@destroy');
+
+    Route::post('/reservations/isAuthorized', 'ReservationsController@canMakeAReservation');
 });

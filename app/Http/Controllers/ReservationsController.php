@@ -49,4 +49,13 @@ class ReservationsController extends Controller
         // delete the reservation
         $reservation->delete();
     }
+
+    public function canMakeAReservation()
+    {
+        $this->authorize('create', Reservation::class);
+
+        return response()->json([
+            'authorized' => true
+        ]);
+    }
 }

@@ -25,7 +25,8 @@
         <div class="flex justify-center m-4">
             <div class="flex items-center mr-8" v-for="parking in parkings" :key="parking.number">
                 <span class="h-4 w-8 block mr-2" :style="{ backgroundColor: parking.color}"></span>
-                Place {{parking.number}}
+                Place {{parking.number}} 
+                <span v-if="parking.number === 3" class="ml-1">- Fred Kmit</span>
             </div>
         </div>
     </div>
@@ -58,7 +59,8 @@ export default {
         return {
             parkings: [
                 {number: 1, color: '#c67bff'},
-                {number: 2, color: '#319795'}
+                {number: 2, color: '#319795'},
+                {number: 3, color: '#ca2e4b'}
             ],
             parkingsAvailable: [],
             selectedReservation: '',
@@ -122,14 +124,26 @@ export default {
             }
         },
         getParkingsAvailable(date) {
+            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')) {
+                this.parkingsAvailable = [
+                    {number: 1, color: '#c67bff'},
+                    {number: 2, color: '#319795'}
+                ]
+            } else {
+                this.parkingsAvailable = this.parkings
+            }
             const dayClickedReservations = this.reservations.filter(event => event.start === date)
             if(dayClickedReservations.length > 0) {
-                return this.parkingsAvailable = this.parkings.filter(park => {
-                    const numberAvailable = dayClickedReservations.find(day => day.parking_number !== park.number)
-                    if(numberAvailable) return park.number !== numberAvailable.parking_number
+                const parkings = []
+                this.parkingsAvailable.forEach(park => {
+                    const test = dayClickedReservations.forEach(res => {
+                        if (res.parking_number !== park.number){
+                            parkings.push(park)
+                        }
+                    })
                 })
+                this.parkingsAvailable = parkings;
             }
-            return this.parkingsAvailable = this.parkings
         },
         isRequestValid(request) {
             if (request.date < moment().startOf('day')) return false

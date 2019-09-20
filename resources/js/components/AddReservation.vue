@@ -77,7 +77,7 @@ export default {
                     parking_number: this.parking_number
                 });
             } catch (error) {
-                console.error(error);
+                console.error(error)
             }
             this.$modal.hide('add');
         }

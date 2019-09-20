@@ -15,7 +15,6 @@ class ReservationRequest extends FormRequest
      */
     public function authorize()
     {
-        
         $requested_date = CarbonImmutable::parse($this->date);        
         
         $reservations_at_requested_date = Reservation::where('date', $this->date)->get();
