@@ -49,7 +49,7 @@ class ReservationPolicy
         }
 
         // check if there is already a reservation this week
-        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', $requested_date->startOfWeek())->exists();
+        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', $requested_date->startOfWeek())->whereDate('date', '<=', $requested_date->endOfWeek())->exists();
         if ($user_reservations) {
             $this->deny('Vous avez déjà une réservation cette semaine');
         }

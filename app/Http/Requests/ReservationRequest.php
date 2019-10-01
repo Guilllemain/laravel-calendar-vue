@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use App\Reservation;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
@@ -16,11 +17,14 @@ class ReservationRequest extends FormRequest
     public function authorize()
     {
         $requested_date = CarbonImmutable::parse($this->date);        
+        $tomorrow = Carbon::tomorrow();
         
         $reservations_at_requested_date = Reservation::where('date', $this->date)->get();
 
         // check if day is full
-        if (count($reservations_at_requested_date) === 2) {
+        if (count($reservations_at_requested_date) === 2 && $requested_date > $tomorrow) {
+            return false;
+        } else if (count($reservations_at_requested_date) === 3 && $requested_date <= $tomorrow) {
             return false;
         }
 
@@ -32,7 +36,7 @@ class ReservationRequest extends FormRequest
         }
 
         // check if there is already a reservation this week
-        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', $requested_date->startOfWeek())->exists();
+        $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', $requested_date->startOfWeek())->whereDate('date', '<=', $requested_date->endOfWeek())->exists();
         if ($user_reservations) {
             return false;
         }

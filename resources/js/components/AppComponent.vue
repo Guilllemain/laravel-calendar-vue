@@ -125,19 +125,17 @@ export default {
         },
         getParkingsAvailable(date) {
             if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')) {
-                this.parkingsAvailable = [
-                    {number: 1, color: '#c67bff'},
-                    {number: 2, color: '#319795'}
-                ]
+                this.parkingsAvailable = this.parkingsAvailable.filter(el => el.number !== 3)
             } else {
                 this.parkingsAvailable = this.parkings
             }
             const dayClickedReservations = this.reservations.filter(event => event.start === date)
+            console.log(dayClickedReservations)
             if(dayClickedReservations.length > 0) {
                 const parkings = []
                 this.parkingsAvailable.forEach(park => {
-                    const test = dayClickedReservations.forEach(res => {
-                        if (res.parking_number !== park.number){
+                    dayClickedReservations.forEach(res => {
+                        if (res.parking_number !== park.number && !parkings.includes(park)) {
                             parkings.push(park)
                         }
                     })
@@ -148,11 +146,12 @@ export default {
         isRequestValid(request) {
             if (request.date < moment().startOf('day')) return false
             const firstDayofWeek = moment(request.date).startOf('week');
+            const lastDayofWeek = moment(request.date).endOf('week');
             const user_reservations = this.reservations.filter(res => res.user_id === this.user.id)
-            const hasAlreadyAReservation = user_reservations.some(resa => moment(resa.start) >= firstDayofWeek)
+            const hasAlreadyAReservation = user_reservations.some(resa => moment(resa.start) >= firstDayofWeek && moment(resa.start) <= lastDayofWeek)
             if (hasAlreadyAReservation) return flash('Vous avez déjà une réservation cette semaine', 'danger')
             if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
-            if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            // if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             return true
         },
         canUserViewReservation(request) {
