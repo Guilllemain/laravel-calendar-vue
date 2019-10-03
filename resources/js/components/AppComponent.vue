@@ -125,33 +125,37 @@ export default {
         },
         getParkingsAvailable(date) {
             if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')) {
-                this.parkingsAvailable = this.parkingsAvailable.filter(el => el.number !== 3)
+                this.parkingsAvailable = this.parkings.filter(el => el.number !== 3)
             } else {
                 this.parkingsAvailable = this.parkings
             }
+            // get all reservations for the day clicked
             const dayClickedReservations = this.reservations.filter(event => event.start === date)
-            console.log(dayClickedReservations)
+
             if(dayClickedReservations.length > 0) {
-                const parkings = []
-                this.parkingsAvailable.forEach(park => {
-                    dayClickedReservations.forEach(res => {
-                        if (res.parking_number !== park.number && !parkings.includes(park)) {
-                            parkings.push(park)
-                        }
-                    })
-                })
-                this.parkingsAvailable = parkings;
+                const parkingsAlreadyBooked = [...new Set(dayClickedReservations.map(res => res.parking_number))]
+                this.parkingsAvailable = this.parkingsAvailable.filter(park => !parkingsAlreadyBooked.includes(park.number))
+            }
+
+            const firstDayofWeek = moment(date).startOf('week');
+            const lastDayofWeek = moment(date).endOf('week');
+            const userReservationsForTheWeek = this.reservations.filter(res => res.user_id === this.user.id && (moment(res.start) >= firstDayofWeek && moment(res.start) <= lastDayofWeek))
+            if (userReservationsForTheWeek.some(res => res.parking_number === 3)) {
+                this.parkingsAvailable = this.parkingsAvailable.filter(park => park.number !== 3)
+            }
+            if (userReservationsForTheWeek.some(res => res.parking_number !== 3)) {
+                this.parkingsAvailable = this.parkingsAvailable.filter(park => park.number === 3)
             }
         },
         isRequestValid(request) {
             if (request.date < moment().startOf('day')) return false
             const firstDayofWeek = moment(request.date).startOf('week');
             const lastDayofWeek = moment(request.date).endOf('week');
-            const user_reservations = this.reservations.filter(res => res.user_id === this.user.id)
-            const hasAlreadyAReservation = user_reservations.some(resa => moment(resa.start) >= firstDayofWeek && moment(resa.start) <= lastDayofWeek)
-            if (hasAlreadyAReservation) return flash('Vous avez déjà une réservation cette semaine', 'danger')
+            const userReservationsForTheWeek = this.reservations.filter(res => res.user_id === this.user.id && (moment(res.start) >= firstDayofWeek && moment(res.start) <= lastDayofWeek))
+            // if (userReservationsForTheWeek.length === 2) return flash('Vous avez déjà deux réservations cette semaine', 'danger')
+            // if (userReservationsForTheWeek.length === 1 && firstDayofWeek > moment().startOf('week')) return flash('Vous avez déjà une réservation cette semaine', 'danger')
             if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
-            // if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             return true
         },
         canUserViewReservation(request) {
@@ -161,11 +165,11 @@ export default {
             return true
         },
         isDayFull(date) {
-            if (this.reservations
-                            .filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length >= 2) {
-                                return true
-                            }
-            return false
+            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')) {
+                return this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length === 2       
+            } else {
+                return this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length === 3
+            }
         },
         createReservation(event) {
             this.pushReservation(event.id, event.username, event.date, event.parking_number, this.user.id, this.user.email)

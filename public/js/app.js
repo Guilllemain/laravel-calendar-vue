@@ -15116,46 +15116,66 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       return getReservation;
     }(),
     getParkingsAvailable: function getParkingsAvailable(date) {
+      var _this2 = this;
+
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day')) {
-        this.parkingsAvailable = this.parkingsAvailable.filter(function (el) {
+        this.parkingsAvailable = this.parkings.filter(function (el) {
           return el.number !== 3;
         });
       } else {
         this.parkingsAvailable = this.parkings;
-      }
+      } // get all reservations for the day clicked
+
 
       var dayClickedReservations = this.reservations.filter(function (event) {
         return event.start === date;
       });
-      console.log(dayClickedReservations);
 
       if (dayClickedReservations.length > 0) {
-        var parkings = [];
-        this.parkingsAvailable.forEach(function (park) {
-          dayClickedReservations.forEach(function (res) {
-            if (res.parking_number !== park.number && !parkings.includes(park)) {
-              parkings.push(park);
-            }
-          });
+        var parkingsAlreadyBooked = _toConsumableArray(new Set(dayClickedReservations.map(function (res) {
+          return res.parking_number;
+        })));
+
+        this.parkingsAvailable = this.parkingsAvailable.filter(function (park) {
+          return !parkingsAlreadyBooked.includes(park.number);
         });
-        this.parkingsAvailable = parkings;
+      }
+
+      var firstDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('week');
+      var lastDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(date).endOf('week');
+      var userReservationsForTheWeek = this.reservations.filter(function (res) {
+        return res.user_id === _this2.user.id && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) >= firstDayofWeek && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) <= lastDayofWeek;
+      });
+
+      if (userReservationsForTheWeek.some(function (res) {
+        return res.parking_number === 3;
+      })) {
+        this.parkingsAvailable = this.parkingsAvailable.filter(function (park) {
+          return park.number !== 3;
+        });
+      }
+
+      if (userReservationsForTheWeek.some(function (res) {
+        return res.parking_number !== 3;
+      })) {
+        this.parkingsAvailable = this.parkingsAvailable.filter(function (park) {
+          return park.number === 3;
+        });
       }
     },
     isRequestValid: function isRequestValid(request) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return false;
       var firstDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('week');
       var lastDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).endOf('week');
-      var user_reservations = this.reservations.filter(function (res) {
-        return res.user_id === _this2.user.id;
-      });
-      var hasAlreadyAReservation = user_reservations.some(function (resa) {
-        return moment__WEBPACK_IMPORTED_MODULE_4___default()(resa.start) >= firstDayofWeek && moment__WEBPACK_IMPORTED_MODULE_4___default()(resa.start) <= lastDayofWeek;
-      });
-      if (hasAlreadyAReservation) return flash('Vous avez déjà une réservation cette semaine', 'danger');
-      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger'); // if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+      var userReservationsForTheWeek = this.reservations.filter(function (res) {
+        return res.user_id === _this3.user.id && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) >= firstDayofWeek && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) <= lastDayofWeek;
+      }); // if (userReservationsForTheWeek.length === 2) return flash('Vous avez déjà deux réservations cette semaine', 'danger')
+      // if (userReservationsForTheWeek.length === 1 && firstDayofWeek > moment().startOf('week')) return flash('Vous avez déjà une réservation cette semaine', 'danger')
 
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
+      if (this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       return true;
     },
     canUserViewReservation: function canUserViewReservation(request) {
@@ -15167,13 +15187,15 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       return true;
     },
     isDayFull: function isDayFull(date) {
-      if (this.reservations.filter(function (event) {
-        return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
-      }).length >= 2) {
-        return true;
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day')) {
+        return this.reservations.filter(function (event) {
+          return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
+        }).length === 2;
+      } else {
+        return this.reservations.filter(function (event) {
+          return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
+        }).length === 3;
       }
-
-      return false;
     },
     createReservation: function createReservation(event) {
       this.pushReservation(event.id, event.username, event.date, event.parking_number, this.user.id, this.user.email);
