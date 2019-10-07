@@ -15050,8 +15050,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
-      if (!this.isRequestValid(arg)) return;
       this.getParkingsAvailable(arg.dateStr);
+      if (!this.isRequestValid(arg)) return;
       this.date = arg.date;
       this.$modal.show('add');
     },
@@ -15118,7 +15118,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
     getParkingsAvailable: function getParkingsAvailable(date) {
       var _this2 = this;
 
-      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day')) {
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day') && this.user.email !== 'fkmit@fft.fr') {
         this.parkingsAvailable = this.parkings.filter(function (el) {
           return el.number !== 3;
         });
@@ -15164,18 +15164,13 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       }
     },
     isRequestValid: function isRequestValid(request) {
-      var _this3 = this;
-
       if (request.date < moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('day')) return false;
+      if (this.user.isAdmin) return true;
       var firstDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('week');
       var lastDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).endOf('week');
-      var userReservationsForTheWeek = this.reservations.filter(function (res) {
-        return res.user_id === _this3.user.id && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) >= firstDayofWeek && moment__WEBPACK_IMPORTED_MODULE_4___default()(res.start) <= lastDayofWeek;
-      }); // if (userReservationsForTheWeek.length === 2) return flash('Vous avez déjà deux réservations cette semaine', 'danger')
-      // if (userReservationsForTheWeek.length === 1 && firstDayofWeek > moment().startOf('week')) return flash('Vous avez déjà une réservation cette semaine', 'danger')
-
-      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       if (this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
+      if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger');
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(request.date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       return true;
     },
     canUserViewReservation: function canUserViewReservation(request) {

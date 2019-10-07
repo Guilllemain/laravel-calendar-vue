@@ -92,8 +92,8 @@ export default {
     },
     methods: {
         handleDateClick(arg) {
-            if (!this.isRequestValid(arg)) return
             this.getParkingsAvailable(arg.dateStr)
+            if (!this.isRequestValid(arg)) return
             this.date = arg.date
             this.$modal.show('add')
         },
@@ -124,7 +124,7 @@ export default {
             }
         },
         getParkingsAvailable(date) {
-            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')) {
+            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day') && this.user.email !== 'fkmit@fft.fr') {
                 this.parkingsAvailable = this.parkings.filter(el => el.number !== 3)
             } else {
                 this.parkingsAvailable = this.parkings
@@ -149,13 +149,12 @@ export default {
         },
         isRequestValid(request) {
             if (request.date < moment().startOf('day')) return false
+            if (this.user.isAdmin) return true
             const firstDayofWeek = moment(request.date).startOf('week');
             const lastDayofWeek = moment(request.date).endOf('week');
-            const userReservationsForTheWeek = this.reservations.filter(res => res.user_id === this.user.id && (moment(res.start) >= firstDayofWeek && moment(res.start) <= lastDayofWeek))
-            // if (userReservationsForTheWeek.length === 2) return flash('Vous avez déjà deux réservations cette semaine', 'danger')
-            // if (userReservationsForTheWeek.length === 1 && firstDayofWeek > moment().startOf('week')) return flash('Vous avez déjà une réservation cette semaine', 'danger')
-            if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
             if(this.isDayFull(request.date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger')
+            if (moment(request.date).startOf('day') > moment().add(7, 'days')) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
             return true
         },
         canUserViewReservation(request) {

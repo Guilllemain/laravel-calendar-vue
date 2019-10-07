@@ -39,7 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
     
-    protected $appends = ['fullname'];
+    protected $appends = ['fullname', 'isAdmin'];
 
     public function isAdmin()
     {
@@ -51,6 +51,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Reservation');
     }
 
+    public function getIsAdminAttribute()
+    {
+        return $this->email === 'fkmit@fft.fr';
+    }
 
     public function getFullnameAttribute()
     {

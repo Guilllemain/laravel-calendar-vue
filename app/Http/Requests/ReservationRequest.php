@@ -35,6 +35,9 @@ class ReservationRequest extends FormRequest
 
         // check if there is already a reservation this week
         $user_reservations = Reservation::where('user_id', auth()->id())->whereDate('date', '>=', $requested_date->startOfWeek())->whereDate('date', '<=', $requested_date->endOfWeek())->get();
+        if (count($user_reservations) === 0) {
+            return true;
+        }
         if (count($user_reservations) === 2 || (count($user_reservations) === 1 && $requested_date->startOfWeek() > now()->startOfWeek())) {
             return false;
         }
