@@ -53,7 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getIsAdminAttribute()
     {
-        return $this->email === 'fkmit@fft.fr';
+        return $this->email === 'fkmit@fft.fr' || $this->email === 'admin@admin.com';
     }
 
     public function getFullnameAttribute()

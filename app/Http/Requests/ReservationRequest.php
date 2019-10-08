@@ -22,7 +22,7 @@ class ReservationRequest extends FormRequest
         $reservations_at_requested_date = Reservation::where('date', $this->date)->get();
 
         // check if day is full
-        if ((count($reservations_at_requested_date) === 2 && $requested_date > $tomorrow) || (count($reservations_at_requested_date) === 3 && $requested_date <= $tomorrow)) {
+        if (((count($reservations_at_requested_date) === 2 && $requested_date > $tomorrow) && !auth()->user()->isAdmin) || (count($reservations_at_requested_date) === 3 && $requested_date <= $tomorrow)) {
             return false;
         }
 
@@ -38,15 +38,18 @@ class ReservationRequest extends FormRequest
         if (count($user_reservations) === 0) {
             return true;
         }
-        if (count($user_reservations) === 2 || (count($user_reservations) === 1 && $requested_date->startOfWeek() > now()->startOfWeek())) {
+        // if user is an admin, he can book as many times the third place as he wants
+        if (auth()->user()->isAdmin && $this->parking_number === 3) return true;
+
+        if (count($user_reservations) === 2 || ((count($user_reservations) === 1 && $requested_date->startOfWeek() > now()->startOfWeek()))) {
             return false;
         }
-
+        
         if ($user_reservations->first()->parking_number !== 3 && $this->parking_number !== 3) {
             return false;
         };
 
-        if ($user_reservations->first()->parking_number === 3 && $this->parking_number === 3) {
+        if ($user_reservations->first()->parking_number === 3 && $this->parking_number === 3 && !auth()->user()->isAdmin) {
             return false;
         };
 
@@ -62,7 +65,7 @@ class ReservationRequest extends FormRequest
     {
         return [
             'parking_number' => 'required|integer|max:10',
-            'date' => 'required|date|after_or_equal:today|before_or_equal:+ 7 days'
+            'date' => 'required|date|after_or_equal:today'
         ];
     }
 }
