@@ -14,7 +14,7 @@
                     v-for="parking in parkings"
                     :key="parking.parking_number"
                     :value="parking.number"
-                >{{ parking.number !== 3 ? `Place ${parking.number}` : `Place ${parking.number} - F. Kmit` }}</option>
+                >{{ parking.number !== 3 ? `Place ${parking.number}` : `Place F. Kmit` }}</option>
             </select>
             <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"

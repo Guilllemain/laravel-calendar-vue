@@ -20,12 +20,13 @@ class ReservationRequest extends FormRequest
         $tomorrow = Carbon::tomorrow();
         
         $reservations_at_requested_date = Reservation::where('date', $this->date)->get();
-
+        
         // check if day is full
-        if (((count($reservations_at_requested_date) === 2 && $requested_date > $tomorrow) && !auth()->user()->isAdmin) || (count($reservations_at_requested_date) === 3 && $requested_date <= $tomorrow)) {
+        $is_third_place_taken = $reservations_at_requested_date->contains('parking_number', 3);
+        if (((count($reservations_at_requested_date) === 2 && $requested_date > $tomorrow) && !auth()->user()->isAdmin && !$is_third_place_taken) || (count($reservations_at_requested_date) === 3 && $requested_date <= $tomorrow)) {
             return false;
         }
-
+        
         // check if the parking requested is not the same as the one already booked
         if (count($reservations_at_requested_date) > 0) {
             if ($reservations_at_requested_date[0]->parking_number === $this->parking_number) {

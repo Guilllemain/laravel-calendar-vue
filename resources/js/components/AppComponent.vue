@@ -25,8 +25,7 @@
         <div class="flex justify-center m-4">
             <div class="flex items-center mr-8" v-for="parking in parkings" :key="parking.number">
                 <span class="h-4 w-8 block mr-2" :style="{ backgroundColor: parking.color}"></span>
-                Place {{parking.number}} 
-                <span v-if="parking.number === 3" class="ml-1">- Fred Kmit</span>
+                {{ parking.number !== 3 ? `Place ${parking.number}` : `Place F. Kmit` }}
             </div>
         </div>
     </div>
@@ -126,9 +125,12 @@ export default {
         getParkingsAvailable(date) {
             if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day') && !this.user.isAdmin) {
                 this.parkingsAvailable = this.parkings.filter(el => el.number !== 3)
+            } else if (this.user.isAdmin) {
+                this.parkingsAvailable = this.parkings.filter(el => el.number === 3)
             } else {
                 this.parkingsAvailable = this.parkings
             }
+
             // get all reservations for the day clicked
             const dayClickedReservations = this.reservations.filter(event => event.start === date)
 
@@ -152,6 +154,7 @@ export default {
             const firstDayofWeek = moment(date).startOf('week');
             const lastDayofWeek = moment(date).endOf('week');
             if(this.isDayFull(date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            if (this.parkingsAvailable.length === 0 && this.user.isAdmin) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger')
             if (moment(date).startOf('day') > moment().add(7, 'days') && !this.user.isAdmin) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
             return true
@@ -163,12 +166,15 @@ export default {
             return true
         },
         isDayFull(date) {
-            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day') && !this.user.isAdmin) {
-                return this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length === 2       
+            const reservationsForTheSelectedDay = this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'))
+            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day')
+                && !this.user.isAdmin
+                && !reservationsForTheSelectedDay.some(res => res.parking_number === 3)) {
+                return reservationsForTheSelectedDay.length === 2       
             } else if (this.user.isAdmin && moment(date).startOf('day') > moment().add(7, 'days')) {
-                return this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length === 1
+                return reservationsForTheSelectedDay.length === 1
             } else {
-                return this.reservations.filter(event => moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')).length === 3
+                return reservationsForTheSelectedDay.length === 3
             }
         },
         createReservation(event) {

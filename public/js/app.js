@@ -14961,7 +14961,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -15122,6 +15121,10 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
         this.parkingsAvailable = this.parkings.filter(function (el) {
           return el.number !== 3;
         });
+      } else if (this.user.isAdmin) {
+        this.parkingsAvailable = this.parkings.filter(function (el) {
+          return el.number === 3;
+        });
       } else {
         this.parkingsAvailable = this.parkings;
       } // get all reservations for the day clicked
@@ -15168,6 +15171,7 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       var firstDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('week');
       var lastDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(date).endOf('week');
       if (this.isDayFull(date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
+      if (this.parkingsAvailable.length === 0 && this.user.isAdmin) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger');
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days') && !this.user.isAdmin) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
       return true;
@@ -15181,18 +15185,18 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       return true;
     },
     isDayFull: function isDayFull(date) {
-      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day') && !this.user.isAdmin) {
-        return this.reservations.filter(function (event) {
-          return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
-        }).length === 2;
+      var reservationsForTheSelectedDay = this.reservations.filter(function (event) {
+        return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
+      });
+
+      if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(1, 'days').startOf('day') && !this.user.isAdmin && !reservationsForTheSelectedDay.some(function (res) {
+        return res.parking_number === 3;
+      })) {
+        return reservationsForTheSelectedDay.length === 2;
       } else if (this.user.isAdmin && moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days')) {
-        return this.reservations.filter(function (event) {
-          return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
-        }).length === 1;
+        return reservationsForTheSelectedDay.length === 1;
       } else {
-        return this.reservations.filter(function (event) {
-          return moment__WEBPACK_IMPORTED_MODULE_4___default()(event.start).format('YYYY-MM-DD') === moment__WEBPACK_IMPORTED_MODULE_4___default()(date).format('YYYY-MM-DD');
-        }).length === 3;
+        return reservationsForTheSelectedDay.length === 3;
       }
     },
     createReservation: function createReservation(event) {
@@ -35159,7 +35163,7 @@ var render = function() {
                     _vm._s(
                       parking.number !== 3
                         ? "Place " + parking.number
-                        : "Place " + parking.number + " - F. Kmit"
+                        : "Place F. Kmit"
                     )
                   )
                 ]
@@ -35295,13 +35299,14 @@ var render = function() {
                 style: { backgroundColor: parking.color }
               }),
               _vm._v(
-                "\n            Place " +
-                  _vm._s(parking.number) +
-                  " \n            "
-              ),
-              parking.number === 3
-                ? _c("span", { staticClass: "ml-1" }, [_vm._v("- Fred Kmit")])
-                : _vm._e()
+                "\n            " +
+                  _vm._s(
+                    parking.number !== 3
+                      ? "Place " + parking.number
+                      : "Place F. Kmit"
+                  ) +
+                  "\n        "
+              )
             ]
           )
         }),
