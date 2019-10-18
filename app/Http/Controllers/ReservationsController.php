@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use Carbon\Carbon;
 use App\Reservation;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
-use App\Http\Resources\Reservation as ReservationResource;
 use App\Http\Requests\ReservationRequest;
 
 class ReservationsController extends Controller
@@ -45,17 +42,13 @@ class ReservationsController extends Controller
     {
         // check if the user can delete the selected reservation
         $this->authorize('delete', $reservation);
+        
+        // the user can't delete a reservation in the past
+        if (Carbon::parse($reservation->date) < now()->startOfDay()) {
+            abort(404, 'Vous ne pouvez pas supprimer une réservation passée');
+        };
 
         // delete the reservation
         $reservation->delete();
-    }
-
-    public function canMakeAReservation()
-    {
-        $this->authorize('create', Reservation::class);
-
-        return response()->json([
-            'authorized' => true
-        ]);
     }
 }

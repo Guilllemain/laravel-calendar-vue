@@ -19,6 +19,11 @@ class ReservationRequest extends FormRequest
         $requested_date = CarbonImmutable::parse($this->date);        
         $tomorrow = Carbon::tomorrow();
         
+        // if the user is an admin, he can book more than 7 days in advance
+        if ($requested_date > now()->startOfDay()->addDays(7) && !auth()->user()->isAdmin) {
+            return false;
+        }
+
         $reservations_at_requested_date = Reservation::where('date', $this->date)->get();
         
         // check if day is full

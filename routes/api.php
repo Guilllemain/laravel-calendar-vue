@@ -14,13 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
     Route::post('/reservation', 'ReservationsController@store'); 
     Route::get('/reservations', 'ReservationsController@index');
     Route::get('/reservation/{reservation}', 'ReservationsController@show');
     Route::delete('/reservation/{reservation}', 'ReservationsController@destroy');
-
-    Route::post('/reservations/isAuthorized', 'ReservationsController@canMakeAReservation');
 });

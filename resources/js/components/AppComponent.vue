@@ -155,8 +155,8 @@ export default {
             const lastDayofWeek = moment(date).endOf('week');
             if(this.isDayFull(date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             if (this.parkingsAvailable.length === 0 && this.user.isAdmin) return flash("Il n'y a plus de places disponible ce jour", 'danger')
-            if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger')
             if (moment(date).startOf('day') > moment().add(7, 'days') && !this.user.isAdmin) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
+            if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger')
             return true
         },
         canUserViewReservation(request) {

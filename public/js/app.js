@@ -15172,8 +15172,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
       var lastDayofWeek = moment__WEBPACK_IMPORTED_MODULE_4___default()(date).endOf('week');
       if (this.isDayFull(date)) return flash("Il n'y a plus de places disponible ce jour", 'danger');
       if (this.parkingsAvailable.length === 0 && this.user.isAdmin) return flash("Il n'y a plus de places disponible ce jour", 'danger');
-      if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger');
       if (moment__WEBPACK_IMPORTED_MODULE_4___default()(date).startOf('day') > moment__WEBPACK_IMPORTED_MODULE_4___default()().add(7, 'days') && !this.user.isAdmin) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger');
+      if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger');
       return true;
     },
     canUserViewReservation: function canUserViewReservation(request) {
