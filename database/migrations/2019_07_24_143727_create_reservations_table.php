@@ -20,7 +20,10 @@ class CreateReservationsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->tinyInteger('parking_number');
-            $table->date('date');            
+            $table->date('date');
+
+            $table->unique(['user_id', 'parking_number', 'date']);
+
             $table->timestamps();
         });
     }

@@ -15049,8 +15049,8 @@ moment__WEBPACK_IMPORTED_MODULE_4___default.a.locale('fr');
   },
   methods: {
     handleDateClick: function handleDateClick(arg) {
-      this.getParkingsAvailable(arg.dateStr);
-      if (!this.isRequestValid(arg.date)) return;
+      this.getParkingsAvailable(arg.dateStr); // if (!this.isRequestValid(arg.date)) return
+
       this.date = arg.date;
       this.$modal.show('add');
     },

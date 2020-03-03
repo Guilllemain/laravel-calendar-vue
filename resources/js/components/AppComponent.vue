@@ -92,7 +92,7 @@ export default {
     methods: {
         handleDateClick(arg) {
             this.getParkingsAvailable(arg.dateStr)
-            if (!this.isRequestValid(arg.date)) return
+            // if (!this.isRequestValid(arg.date)) return
             this.date = arg.date
             this.$modal.show('add')
         },
