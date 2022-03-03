@@ -30,3 +30,9 @@ Route::prefix('/admin')->namespace('Admin')->middleware('admin')->group(function
     // Route::patch('/reservation/{reservation}', 'ReservationsController@update');
     Route::delete('/reservation/{reservation}', 'ReservationsController@destroy');
 });
+
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    return "Cache is cleared";
+});
