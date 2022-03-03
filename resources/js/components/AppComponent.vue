@@ -92,7 +92,7 @@ export default {
     methods: {
         handleDateClick(arg) {
             this.getParkingsAvailable(arg.dateStr)
-            // if (!this.isRequestValid(arg.date)) return
+            if (!this.isRequestValid(arg.date)) return
             this.date = arg.date
             this.$modal.show('add')
         },
@@ -123,7 +123,7 @@ export default {
             }
         },
         getParkingsAvailable(date) {
-            if (moment(date).startOf('day') > moment().add(1, 'days').startOf('day') && !this.user.isAdmin) {
+            if ((moment(date).startOf('day') > moment().add(1, 'days').startOf('day') && !this.user.isAdmin) || this.user.id === 14) {
                 this.parkingsAvailable = this.parkings.filter(el => el.number !== 3)
             } else if (this.user.isAdmin) {
                 this.parkingsAvailable = this.parkings.filter(el => el.number === 3)
@@ -150,18 +150,17 @@ export default {
             }
         },
         isRequestValid(date) {
-            if (date < moment().startOf('day')) return false
-            const firstDayofWeek = moment(date).startOf('week');
-            const lastDayofWeek = moment(date).endOf('week');
-            if(this.isDayFull(date)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
-            if (this.parkingsAvailable.length === 0 && this.user.isAdmin) return flash("Il n'y a plus de places disponible ce jour", 'danger')
+            if (date < moment().startOf('day')) return false;
+            if(this.isDayFull(date) || (this.parkingsAvailable.length === 0 && this.user.isAdmin)) return flash("Il n'y a plus de places disponible ce jour", 'danger')
             if (moment(date).startOf('day') > moment().add(7, 'days') && !this.user.isAdmin) return flash("Vous ne pouvez pas faire une réservation plus de 7 jours en avance", 'danger')
+            if (this.parkingsAvailable.length === 0 && this.user.id === 14) return;
             if (this.parkingsAvailable.length === 0) return flash('Vous avez déjà réservé cette semaine', 'danger')
             return true
         },
         canUserViewReservation(request) {
             const clickedEvent = this.reservations.find(event => event.id === Number(request.id))
-            if (clickedEvent.user_id === this.user.id && request.start < moment().startOf('day')) return flash('Vous ne pouvez pas modifier une réservation passée', 'danger')
+            if (clickedEvent.user_id === this.user.id && request.start < moment().startOf('day')) return flash('Vous ne pouvez pas supprimer une réservation passée', 'danger')
+            if (clickedEvent.user_id === this.user.id && moment(request.start).add(8, 'hours') < moment()) return flash('Vous ne pouvez pas supprimer une réservation le jour même', 'danger')
             if (clickedEvent.user_id !== this.user.id) return flash('Vous pouvez modifier uniquement vos réservations', 'danger')
             return true
         },

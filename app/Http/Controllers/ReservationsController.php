@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Carbon\Carbon;
 use App\Reservation;
 use App\Http\Requests\ReservationRequest;
@@ -21,6 +20,9 @@ class ReservationsController extends Controller
 
     public function store(ReservationRequest $request)
     {
+        if (auth()->id() === 14 && $request->parking_number == 3) {
+            abort(404, 'Une erreur est survenue');
+        }
         // add record to the database
         $reservation = Reservation::create([
             'user_id' => auth()->id(),
@@ -44,7 +46,7 @@ class ReservationsController extends Controller
         $this->authorize('delete', $reservation);
         
         // the user can't delete a reservation in the past
-        if (Carbon::parse($reservation->date) < now()->startOfDay()) {
+        if (Carbon::parse($reservation->date) < now()->startOfDay() || Carbon::parse($reservation->date)->addHours(9) < now()) {
             abort(404, 'Vous ne pouvez pas supprimer une réservation passée');
         };
 
