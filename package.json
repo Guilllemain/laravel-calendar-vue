@@ -25,7 +25,7 @@
         "@fullcalendar/interaction": "^4.2.0",
         "@fullcalendar/timegrid": "^4.2.0",
         "@fullcalendar/vue": "^4.2.2",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "tailwindcss": "^1.0.5"
     }
 }
